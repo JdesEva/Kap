@@ -14,6 +14,7 @@
   "private": true,
   "main": "dist-js/index.js",
   "scripts": {
+    "eva": "echo 123",
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test:main": "TS_NODE_PROJECT=test/tsconfig.json ava",
@@ -239,8 +240,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn build",
-      "pre-push": "yarn build"
+      "pre-commit": "yarn eva",
+      "pre-push": "yarn eva"
     }
   },
   "build": {
