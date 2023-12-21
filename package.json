@@ -14,7 +14,7 @@
   "private": true,
   "main": "dist-js/index.js",
   "scripts": {
-    "eva": "echo 123",
+    "eva": "yarn dist && yarn sentry:sourcemaps",
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test:main": "TS_NODE_PROJECT=test/tsconfig.json ava",
@@ -23,19 +23,21 @@
     "start": "tsc && run-electron .",
     "build-main": "tsc",
     "build-renderer": "next build renderer && next export renderer",
-    "build": "yarn build-main && yarn build-renderer",
+    "build": "yarn build-main && yarn build-renderer && yarn sentry:sourcemaps",
     "dist": "npm run build && electron-builder",
     "pack": "npm run build && electron-builder --dir",
     "postinstall": "electron-builder install-app-deps",
     "sentry-version": "echo \"$npm_package_name@$npm_package_version\"",
-    "dev": "next dev renderer"
+    "dev": "next dev renderer",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eva-gg --project kap ./dist-js && sentry-cli sourcemaps upload --org eva-gg --project kap ./dist-js"
   },
   "bundle": {
     "name": "Kap"
   },
   "dependencies": {
-    "@sentry/browser": "^6.2.2",
-    "@sentry/electron": "^2.4.0",
+    "@sentry/browser": "^7.90.0",
+    "@sentry/cli": "^2.23.0",
+    "@sentry/electron": "^4.15.1",
     "@sindresorhus/to-milliseconds": "^1.2.0",
     "ajv": "^6.12.2",
     "aperture": "^6.1.2",
@@ -240,8 +242,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn eva",
-      "pre-push": "yarn eva"
+      "pre-commit": "yarn eva"
     }
   },
   "build": {
