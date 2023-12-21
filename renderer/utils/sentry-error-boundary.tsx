@@ -22,7 +22,8 @@ class SentryErrorBoundary extends React.Component<{
       const release = `${api.app.name}@${api.app.getVersion()}`.toLowerCase();
       Sentry.init({
         dsn: SENTRY_PUBLIC_DSN,
-        release, // This sets the sample rate to be 10%. You may want this to be 100% while
+        release, 
+        // This sets the sample rate to be 10%. You may want this to be 100% while
         // in development and sample at a lower rate in production
         replaysSessionSampleRate: 0.1,
 

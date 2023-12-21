@@ -14,7 +14,6 @@
   "private": true,
   "main": "dist-js/index.js",
   "scripts": {
-    "eva": "yarn dist && yarn sentry:sourcemaps",
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test:main": "TS_NODE_PROJECT=test/tsconfig.json ava",
@@ -35,7 +34,7 @@
     "name": "Kap"
   },
   "dependencies": {
-    "@sentry/browser": "^7.90.0",
+    "@sentry/browser": "7.84.0",
     "@sentry/cli": "^2.23.0",
     "@sentry/electron": "^4.15.1",
     "@sindresorhus/to-milliseconds": "^1.2.0",
@@ -239,11 +238,6 @@
         }
       }
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn eva"
-    }
   },
   "build": {
     "appId": "com.wulkano.kap",
