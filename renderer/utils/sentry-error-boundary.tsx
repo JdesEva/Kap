@@ -37,7 +37,10 @@ class SentryErrorBoundary extends React.Component<{
             maskAllText: true,
             blockAllMedia: true,
           }),
+          new Sentry.BrowserTracing()
         ],
+        // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+        tracePropagationTargets: [/^\//],
       });
     }
   }
