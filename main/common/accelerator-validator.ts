@@ -4,100 +4,113 @@
 // Also, this extracts the right accelerator from a keyboard event, checking the
 // location for numpad keys and special characters for when shift is pressed
 
-const modifiers = ['Command', 'Alt', 'Option', 'Shift', 'Cmd', 'Control', 'Ctrl'];
+const modifiers = [
+  "Command",
+  "Alt",
+  "Option",
+  "Shift",
+  "Cmd",
+  "Control",
+  "Ctrl",
+];
 
 const codes = [
-  'Plus',
-  'Space',
-  'Tab',
-  'Capslock',
-  'Numlock',
-  'Scrolllock',
-  'Backspace',
-  'Delete',
-  'Insert',
-  'Return',
-  'Enter',
-  'Up',
-  'Down',
-  'Left',
-  'Right',
-  'PageUp',
-  'PageDown',
-  'Escape',
-  'Esc',
-  'VolumeUp',
-  'VolumeDown',
-  'VolumeMute',
-  'num0',
-  'num1',
-  'num2',
-  'num3',
-  'num4',
-  'num5',
-  'num6',
-  'num7',
-  'num8',
-  'num9',
-  'numdec',
-  'numadd',
-  'numsub',
-  'nummult',
-  'numdiv'
+  "Plus",
+  "Space",
+  "Tab",
+  "Capslock",
+  "Numlock",
+  "Scrolllock",
+  "Backspace",
+  "Delete",
+  "Insert",
+  "Return",
+  "Enter",
+  "Up",
+  "Down",
+  "Left",
+  "Right",
+  "PageUp",
+  "PageDown",
+  "Escape",
+  "Esc",
+  "VolumeUp",
+  "VolumeDown",
+  "VolumeMute",
+  "num0",
+  "num1",
+  "num2",
+  "num3",
+  "num4",
+  "num5",
+  "num6",
+  "num7",
+  "num8",
+  "num9",
+  "numdec",
+  "numadd",
+  "numsub",
+  "nummult",
+  "numdiv",
 ] as const;
 
-const getKeyCodeRegex = () => new RegExp('^([\\dA-Z~`!@#$%^&*()_+=.,<>?;:\'"\\-\\/\\\\\\[\\]\\{\\}\\|]|F([1-9]|1[\\d]|2[0-4])|' + codes.join('|') + ')$');
+const getKeyCodeRegex = () =>
+  new RegExp(
+    "^([\\dA-Z~`!@#$%^&*()_+=.,<>?;:'\"\\-\\/\\\\\\[\\]\\{\\}\\|]|F([1-9]|1[\\d]|2[0-4])|" +
+      codes.join("|") +
+      ")$"
+  );
 
 const shiftKeyMap = new Map([
-  ['~', '`'],
-  ['!', '1'],
-  ['@', '2'],
-  ['#', '3'],
-  ['$', '4'],
-  ['%', '5'],
-  ['^', '6'],
-  ['&', '7'],
-  ['*', '8'],
-  ['(', '9'],
-  [')', '0'],
-  ['_', '-'],
-  ['+', '='],
-  ['{', '['],
-  ['}', ']'],
-  ['|', '\\'],
-  [':', ';'],
-  ['"', '\''],
-  ['<', ','],
-  ['>', '.'],
-  ['?', '/']
+  ["~", "`"],
+  ["!", "1"],
+  ["@", "2"],
+  ["#", "3"],
+  ["$", "4"],
+  ["%", "5"],
+  ["^", "6"],
+  ["&", "7"],
+  ["*", "8"],
+  ["(", "9"],
+  [")", "0"],
+  ["_", "-"],
+  ["+", "="],
+  ["{", "["],
+  ["}", "]"],
+  ["|", "\\"],
+  [":", ";"],
+  ['"', "'"],
+  ["<", ","],
+  [">", "."],
+  ["?", "/"],
 ]);
 
 const numpadKeyMap = new Map([
-  ['0', 'num0'],
-  ['1', 'num1'],
-  ['2', 'num2'],
-  ['3', 'num3'],
-  ['4', 'num4'],
-  ['5', 'num5'],
-  ['6', 'num6'],
-  ['7', 'num7'],
-  ['8', 'num8'],
-  ['9', 'num9'],
-  ['.', 'numdec'],
-  ['+', 'numadd'],
-  ['-', 'numsub'],
-  ['*', 'nummult'],
-  ['/', 'numdiv']
+  ["0", "num0"],
+  ["1", "num1"],
+  ["2", "num2"],
+  ["3", "num3"],
+  ["4", "num4"],
+  ["5", "num5"],
+  ["6", "num6"],
+  ["7", "num7"],
+  ["8", "num8"],
+  ["9", "num9"],
+  [".", "numdec"],
+  ["+", "numadd"],
+  ["-", "numsub"],
+  ["*", "nummult"],
+  ["/", "numdiv"],
 ]);
 
 const namedKeyCodeMap = new Map([
-  [' ', 'Space'],
-  ['CapsLock', 'Capslock'],
-  ['ArrowUp', 'Up'],
-  ['ArrowDown', 'Down'],
-  ['ArrowLeft', 'Left'],
-  ['ArrowRight', 'Right'],
-  ['Clear', 'Numlock']
+  [" ", "Space"],
+  ["CapsLock", "Capslock"],
+  ["ArrowUp", "Up"],
+  ["ArrowDown", "Down"],
+  ["ArrowLeft", "Left"],
+  ["ArrowRight", "Right"],
+  ["Clear", "Numlock"],
 ]);
 
 export const checkAccelerator = (accelerator: string) => {
@@ -105,7 +118,7 @@ export const checkAccelerator = (accelerator: string) => {
     return true;
   }
 
-  const parts = accelerator.split('+');
+  const parts = accelerator.split("+");
 
   if (parts.length < 2) {
     return false;
@@ -116,7 +129,10 @@ export const checkAccelerator = (accelerator: string) => {
   }
 
   const metaKeys = parts.slice(0, -1);
-  return metaKeys.every(part => modifiers.includes(part)) && metaKeys.some(part => part !== 'Shift');
+  return (
+    metaKeys.every((part) => modifiers.includes(part)) &&
+    metaKeys.some((part) => part !== "Shift")
+  );
 };
 
 export const eventKeyToAccelerator = (key: string, location: number) => {

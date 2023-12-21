@@ -1,23 +1,43 @@
-import {windowManager} from './windows/manager';
-import {setRecordingTray, setPausedTray, disableTray, resetTray} from './tray';
-import {setCropperShortcutAction} from './global-accelerators';
-import {settings} from './common/settings';
-import {track} from './common/analytics';
-import {plugins} from './plugins';
-import {getAudioDevices, getSelectedInputDeviceId} from './utils/devices';
-import {showError} from './utils/errors';
-import {RecordServiceContext, RecordServiceState} from './plugins/service-context';
-import {setCurrentRecording, updatePluginState, stopCurrentRecording} from './recording-history';
-import {Recording} from './video';
-import {ApertureOptions, StartRecordingOptions} from './common/types';
-import {InstalledPlugin} from './plugins/plugin';
-import {RecordService, RecordServiceHook} from './plugins/service';
-import {getCurrentDurationStart, getOverallDuration, setCurrentDurationStart, setOverallDuration} from './utils/track-duration';
+import { windowManager } from "./windows/manager";
+import {
+  setRecordingTray,
+  setPausedTray,
+  disableTray,
+  resetTray,
+} from "./tray";
+import { setCropperShortcutAction } from "./global-accelerators";
+import { settings } from "./common/settings";
+import { track } from "./common/analytics";
+import { plugins } from "./plugins";
+import { getAudioDevices, getSelectedInputDeviceId } from "./utils/devices";
+import { showError } from "./utils/errors";
+import {
+  RecordServiceContext,
+  RecordServiceState,
+} from "./plugins/service-context";
+import {
+  setCurrentRecording,
+  updatePluginState,
+  stopCurrentRecording,
+} from "./recording-history";
+import { Recording } from "./video";
+import { ApertureOptions, StartRecordingOptions } from "./common/types";
+import { InstalledPlugin } from "./plugins/plugin";
+import { RecordService, RecordServiceHook } from "./plugins/service";
+import {
+  getCurrentDurationStart,
+  getOverallDuration,
+  setCurrentDurationStart,
+  setOverallDuration,
+} from "./utils/track-duration";
 
-const createAperture = require('aperture');
+const createAperture = require("aperture");
 const aperture = createAperture();
 
-let recordingPlugins: Array<{plugin: InstalledPlugin; service: RecordService}> = [];
+let recordingPlugins: Array<{
+  plugin: InstalledPlugin;
+  service: RecordService;
+}> = [];
 const serviceState = new Map<string, RecordServiceState>();
 let apertureOptions: ApertureOptions;
 let recordingName: string | undefined;
@@ -28,41 +48,52 @@ const setRecordingName = (name: string) => {
 };
 
 const serializeEditPluginState = () => {
-  const result: Record<string, Record<string, Record<string, unknown> | undefined>> = {};
+  const result: Record<
+    string,
+    Record<string, Record<string, unknown> | undefined>
+  > = {};
 
-  for (const {plugin, service} of recordingPlugins) {
+  for (const { plugin, service } of recordingPlugins) {
     if (!result[plugin.name]) {
       result[plugin.name] = {};
     }
 
-    result[plugin.name][service.title] = serviceState.get(service.title)?.persistedState;
+    result[plugin.name][service.title] = serviceState.get(
+      service.title
+    )?.persistedState;
   }
 
   return result;
 };
 
-const callPlugins = async (method: RecordServiceHook) => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
-  if (service[method] && typeof service[method] === 'function') {
-    try {
-      await service[method]?.(
-        new RecordServiceContext({
-          plugin,
-          apertureOptions,
-          state: serviceState.get(service.title) ?? {},
-          setRecordingName
-        })
-      );
-    } catch (error) {
-      showError(error as any, {title: `Something went wrong while using the plugin “${plugin.prettyName}”`, plugin});
-    }
-  }
-}));
+const callPlugins = async (method: RecordServiceHook) =>
+  Promise.all(
+    recordingPlugins.map(async ({ plugin, service }) => {
+      if (service[method] && typeof service[method] === "function") {
+        try {
+          await service[method]?.(
+            new RecordServiceContext({
+              plugin,
+              apertureOptions,
+              state: serviceState.get(service.title) ?? {},
+              setRecordingName,
+            })
+          );
+        } catch (error) {
+          showError(error as any, {
+            title: `Something went wrong while using the plugin “${plugin.prettyName}”`,
+            plugin,
+          });
+        }
+      }
+    })
+  );
 
 const cleanup = async () => {
   windowManager.cropper?.close();
   resetTray();
 
-  await callPlugins('didStopRecording');
+  await callPlugins("didStopRecording");
   serviceState.clear();
 
   setCropperShortcutAction();
@@ -80,23 +111,20 @@ export const startRecording = async (options: StartRecordingOptions) => {
   windowManager.cropper?.disable();
   disableTray();
 
-  const {cropperBounds, screenBounds, displayId} = options;
+  const { cropperBounds, screenBounds, displayId } = options;
 
-  cropperBounds.y = screenBounds.height - (cropperBounds.y + cropperBounds.height);
+  cropperBounds.y =
+    screenBounds.height - (cropperBounds.y + cropperBounds.height);
 
-  const {
-    record60fps,
-    showCursor,
-    highlightClicks,
-    recordAudio
-  } = settings.store;
+  const { record60fps, showCursor, highlightClicks, recordAudio } =
+    settings.store;
 
   apertureOptions = {
     fps: record60fps ? 60 : 30,
     cropArea: cropperBounds,
     showCursor,
     highlightClicks,
-    screenId: displayId
+    screenId: displayId,
   };
 
   if (recordAudio) {
@@ -118,24 +146,24 @@ export const startRecording = async (options: StartRecordingOptions) => {
 
   console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
 
-  recordingPlugins = plugins
-    .recordingPlugins
-    .flatMap(
-      plugin => {
-        const validServices = plugin.config.validServices;
-        return plugin.recordServicesWithStatus
-          // Make sure service is valid and enabled
-          .filter(({title, isEnabled}) => isEnabled && validServices.includes(title))
-          .map(service => ({plugin, service}));
-      }
+  recordingPlugins = plugins.recordingPlugins.flatMap((plugin) => {
+    const validServices = plugin.config.validServices;
+    return (
+      plugin.recordServicesWithStatus
+        // Make sure service is valid and enabled
+        .filter(
+          ({ title, isEnabled }) => isEnabled && validServices.includes(title)
+        )
+        .map((service) => ({ plugin, service }))
     );
+  });
 
-  for (const {service, plugin} of recordingPlugins) {
-    serviceState.set(service.title, {persistedState: {}});
+  for (const { service, plugin } of recordingPlugins) {
+    serviceState.set(service.title, { persistedState: {} });
     track(`plugins/used/record/${plugin.name}`);
   }
 
-  await callPlugins('willStartRecording');
+  await callPlugins("willStartRecording");
 
   try {
     const filePath = await aperture.startRecording(apertureOptions);
@@ -146,11 +174,11 @@ export const startRecording = async (options: StartRecordingOptions) => {
       filePath,
       name: recordingName,
       apertureOptions,
-      plugins: serializeEditPluginState()
+      plugins: serializeEditPluginState(),
     });
   } catch (error) {
-    track('recording/stopped/error');
-    showError(error as any, {title: 'Recording error', plugin: undefined});
+    track("recording/stopped/error");
+    showError(error as any, { title: "Recording error", plugin: undefined });
     past = undefined;
     cleanup();
     return;
@@ -160,7 +188,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
   if (startTime > 3) {
     track(`recording/started/${startTime}`);
   } else {
-    track('recording/started');
+    track("recording/started");
   }
 
   console.log(`Started recording after ${startTime}s`);
@@ -173,14 +201,14 @@ export const startRecording = async (options: StartRecordingOptions) => {
   aperture.recorder.catch((error: any) => {
     // Make sure it doesn't catch the error of ending the recording
     if (past) {
-      track('recording/stopped/error');
-      showError(error, {title: 'Recording error', plugin: undefined});
+      track("recording/stopped/error");
+      showError(error, { title: "Recording error", plugin: undefined });
       past = undefined;
       cleanup();
     }
   });
 
-  await callPlugins('didStartRecording');
+  await callPlugins("didStartRecording");
   updatePluginState(serializeEditPluginState());
 };
 
@@ -200,8 +228,8 @@ export const stopRecording = async () => {
     setOverallDuration(0);
     setCurrentDurationStart(0);
   } catch (error) {
-    track('recording/stopped/error');
-    showError(error as any, {title: 'Recording error', plugin: undefined});
+    track("recording/stopped/error");
+    showError(error as any, { title: "Recording error", plugin: undefined });
     cleanup();
     return;
   }
@@ -209,12 +237,12 @@ export const stopRecording = async () => {
   try {
     cleanup();
   } finally {
-    track('editor/opened/recording');
+    track("editor/opened/recording");
 
     const recording = new Recording({
       filePath,
       title: recordingName,
-      apertureOptions
+      apertureOptions,
     });
     await recording.openEditorWindow();
 
@@ -236,8 +264,8 @@ export const stopRecordingWithNoEdit = async () => {
     setOverallDuration(0);
     setCurrentDurationStart(0);
   } catch (error) {
-    track('recording/quit/error');
-    showError(error as any, {title: 'Recording error', plugin: undefined});
+    track("recording/quit/error");
+    showError(error as any, { title: "Recording error", plugin: undefined });
     cleanup();
     return;
   }
@@ -245,7 +273,7 @@ export const stopRecordingWithNoEdit = async () => {
   try {
     cleanup();
   } finally {
-    track('recording/quit');
+    track("recording/quit");
     stopCurrentRecording(recordingName);
   }
 };
@@ -259,14 +287,16 @@ export const pauseRecording = async () => {
 
   try {
     await aperture.pause();
-    setOverallDuration(getOverallDuration() + (Date.now() - getCurrentDurationStart()));
+    setOverallDuration(
+      getOverallDuration() + (Date.now() - getCurrentDurationStart())
+    );
     setCurrentDurationStart(0);
     setPausedTray();
-    track('recording/paused');
+    track("recording/paused");
     console.log(`Paused recording after ${(Date.now() - past) / 1000}s`);
   } catch (error) {
-    track('recording/paused/error');
-    showError(error as any, {title: 'Recording error', plugin: undefined});
+    track("recording/paused/error");
+    showError(error as any, { title: "Recording error", plugin: undefined });
     cleanup();
   }
 };
@@ -282,11 +312,11 @@ export const resumeRecording = async () => {
     await aperture.resume();
     setCurrentDurationStart(Date.now());
     setRecordingTray();
-    track('recording/resumed');
+    track("recording/resumed");
     console.log(`Resume recording after ${(Date.now() - past) / 1000}s`);
   } catch (error) {
-    track('recording/resumed/error');
-    showError(error as any, {title: 'Recording error', plugin: undefined});
+    track("recording/resumed/error");
+    showError(error as any, { title: "Recording error", plugin: undefined });
     cleanup();
   }
 };

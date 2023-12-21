@@ -1,5 +1,5 @@
-import moment from 'moment';
-import prettyMilliseconds from 'pretty-ms';
+import moment from "moment";
+import prettyMilliseconds from "pretty-ms";
 
 export interface ConvertOptions {
   inputPath: string;
@@ -21,14 +21,28 @@ export interface ConvertOptions {
 
 export const makeEven = (number: number) => 2 * Math.round(number / 2);
 
-export const areDimensionsEven = ({width, height}: {width: number; height: number}) => width % 2 === 0 && height % 2 === 0;
+export const areDimensionsEven = ({
+  width,
+  height,
+}: {
+  width: number;
+  height: number;
+}) => width % 2 === 0 && height % 2 === 0;
 
-export const extractProgressFromStderr = (stderr: string, conversionStartTime: number, durationMs: number) => {
+export const extractProgressFromStderr = (
+  stderr: string,
+  conversionStartTime: number,
+  durationMs: number
+) => {
   const conversionDuration = Date.now() - conversionStartTime;
   const data = stderr.trim();
 
-  const speed = Number.parseFloat(/speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm.exec(data)?.[1] ?? '0');
-  const processedMs = moment.duration(/time=\s*(\d\d:\d\d:\d\d.\d\d)/gm.exec(data)?.[1] ?? 0).asMilliseconds();
+  const speed = Number.parseFloat(
+    /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm.exec(data)?.[1] ?? "0"
+  );
+  const processedMs = moment
+    .duration(/time=\s*(\d\d:\d\d:\d\d.\d\d)/gm.exec(data)?.[1] ?? 0)
+    .asMilliseconds();
 
   if (speed > 0) {
     const progress = processedMs / durationMs;
@@ -40,25 +54,27 @@ export const extractProgressFromStderr = (stderr: string, conversionStartTime: n
 
       return {
         progress,
-        estimate: prettyMilliseconds(Math.max(msRemaining, 1000), {compact: true})
+        estimate: prettyMilliseconds(Math.max(msRemaining, 1000), {
+          compact: true,
+        }),
       };
     }
 
-    return {progress};
+    return { progress };
   }
 
   return undefined;
 };
 
-type ArgType = string[] | string | {args: string[]; if: boolean};
+type ArgType = string[] | string | { args: string[]; if: boolean };
 
 // Resolve conditional args
 //
 // conditionalArgs(['default', 'args'], {args: ['ignore', 'these'], if: false});
 // => ['default', 'args']
 export const conditionalArgs = (...args: ArgType[]): string[] => {
-  return args.flatMap(arg => {
-    if (typeof arg === 'string') {
+  return args.flatMap((arg) => {
+    if (typeof arg === "string") {
       return [arg];
     }
 

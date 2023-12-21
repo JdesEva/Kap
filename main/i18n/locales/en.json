@@ -1,0 +1,24 @@
+{
+  "translation": {
+    "About": "About",
+    "SendFeedback": "Send Feedback…",
+    "Preferences": "Preferences…",
+    "OpenVideo": "Open Video…",
+    "ExportHistory": "Export History",
+    "Loading": "Loading…",
+    "ExportCompleted": "Export completed",
+    "ExportCanceled": "Export canceled",
+    "ExportFailed": "Export failed",
+    "Quit": "Quit",
+    "Continue": "Continue",
+    "BeforeQuitExportMessage": "Do you want to continue exporting?",
+    "BeforeQuitExportDetail": "Kap is currently exporting files. If you quit, the export task will be canceled.",
+    "Help": "Help",
+    "Microphone": "Microphone",
+    "Plugins": "Plugins",
+    "None": "None",
+    "Stop": "Stop",
+    "Pause": "Pause",
+    "Resume": "Resume"
+  }
+}

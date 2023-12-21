@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-import util from 'electron-util';
-import {parse} from 'semver';
-import {settings} from './settings';
+import util from "electron-util";
+import { parse } from "semver";
+import { settings } from "./settings";
 
 // TODO: Disabled because of https://github.com/wulkano/Kap/issues/1126
 /// const Insight = require('insight');
-const pkg = require('../../package');
+const pkg = require("../../package");
 
 /// const trackingCode = 'UA-84705099-2';
 /// const insight = new Insight({trackingCode, pkg});
@@ -14,10 +14,10 @@ const pkg = require('../../package');
 const version = parse(pkg.version);
 
 export const track = (...paths: string[]) => {
-  const allowAnalytics = settings.get('allowAnalytics');
+  const allowAnalytics = settings.get("allowAnalytics");
 
   if (allowAnalytics) {
-    console.log('Tracking', `v${version?.major}.${version?.minor}`, ...paths);
+    console.log("Tracking", `v${version?.major}.${version?.minor}`, ...paths);
     /// insight.track(`v${version?.major}.${version?.minor}`, ...paths);
   }
 };
@@ -27,8 +27,8 @@ export const initializeAnalytics = () => {
     /// insight.track('install');
   }
 
-  if (settings.get('version') !== pkg.version) {
-    track('install');
-    settings.set('version', pkg.version);
+  if (settings.get("version") !== pkg.version) {
+    track("install");
+    settings.set("version", pkg.version);
   }
 };

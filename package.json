@@ -56,6 +56,8 @@
     "ffmpeg-static": "^4.4.1",
     "gifsicle": "^5.2.0",
     "got": "^9.6.0",
+    "i18next": "^23.7.11",
+    "i18next-browser-languagedetector": "^7.2.0",
     "insight": "^0.10.3",
     "is-online": "^8.4.0",
     "lodash": "^4.17.21",
@@ -237,8 +239,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint",
-      "pre-push": "yarn lint"
+      "pre-commit": "yarn build",
+      "pre-push": "yarn build"
     }
   },
   "build": {

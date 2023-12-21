@@ -1,29 +1,25 @@
-import path from 'path';
-import tempy from 'tempy';
-import {Encoding, Format} from '../common/types';
-import {track} from '../common/analytics';
-import h264Converters, {crop as h264Crop} from './h264';
-import {ConvertOptions} from './utils';
-import {getFormatExtension} from '../common/constants';
-import PCancelable, {OnCancelFunction} from 'p-cancelable';
-import {convert} from './process';
-import {plugins} from '../plugins';
-import {EditServiceContext} from '../plugins/service-context';
-import {settings} from '../common/settings';
-import {Except} from 'type-fest';
+import path from "path";
+import tempy from "tempy";
+import { Encoding, Format } from "../common/types";
+import { track } from "../common/analytics";
+import h264Converters, { crop as h264Crop } from "./h264";
+import { ConvertOptions } from "./utils";
+import { getFormatExtension } from "../common/constants";
+import PCancelable, { OnCancelFunction } from "p-cancelable";
+import { convert } from "./process";
+import { plugins } from "../plugins";
+import { EditServiceContext } from "../plugins/service-context";
+import { settings } from "../common/settings";
+import { Except } from "type-fest";
 
-const converters = new Map([
-  [Encoding.h264, h264Converters]
-]);
+const converters = new Map([[Encoding.h264, h264Converters]]);
 
-const croppingHandlers = new Map([
-  [Encoding.h264, h264Crop]
-]);
+const croppingHandlers = new Map([[Encoding.h264, h264Crop]]);
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 export const convertTo = (
   format: Format,
-  options: Except<ConvertOptions, 'outputPath'> & {defaultFileName: string},
+  options: Except<ConvertOptions, "outputPath"> & { defaultFileName: string },
   encoding: Encoding = Encoding.h264
 ) => {
   if (!converters.has(encoding)) {
@@ -40,8 +36,11 @@ export const convertTo = (
   track(`file/export/format/${format}`);
 
   const conversionOptions = {
-    outputPath: path.join(tempy.directory(), `${options.defaultFileName}.${getFormatExtension(format)}`),
-    ...options
+    outputPath: path.join(
+      tempy.directory(),
+      `${options.defaultFileName}.${getFormatExtension(format)}`
+    ),
+    ...options,
   };
 
   if (options.editService) {
@@ -51,7 +50,12 @@ export const convertTo = (
       throw new Error(`Unsupported encoding: ${encoding}`);
     }
 
-    return convertWithEditPlugin({...conversionOptions, format, croppingHandler, converter});
+    return convertWithEditPlugin({
+      ...conversionOptions,
+      format,
+      croppingHandler,
+      converter,
+    });
   }
 
   return converter(conversionOptions);
@@ -70,13 +74,13 @@ const convertWithEditPlugin = PCancelable.fn(
     let isCanceled = false;
 
     if (options.shouldCrop) {
-      croppedPath = tempy.file({extension: path.extname(options.inputPath)});
+      croppedPath = tempy.file({ extension: path.extname(options.inputPath) });
 
-      options.onProgress('Cropping', 0);
+      options.onProgress("Cropping", 0);
 
       const cropProcess = options.croppingHandler({
         ...options,
-        outputPath: croppedPath
+        outputPath: croppedPath,
       });
 
       onCancel(() => {
@@ -87,48 +91,53 @@ const convertWithEditPlugin = PCancelable.fn(
       await cropProcess;
 
       if (isCanceled) {
-        return '';
+        return "";
       }
     } else {
       croppedPath = options.inputPath;
     }
 
     // eslint-disable-next-line @typescript-eslint/promise-function-async
-    const convertFunction = (args: string[], text = 'Converting') => new PCancelable<void>(async (resolve, reject, onCancel) => {
-      try {
-        const process = convert(
-          '', {
-            shouldTrack: false,
-            startTime: options.startTime,
-            endTime: options.endTime,
-            onProgress: (progress, estimate) => {
-              options.onProgress(text, progress, estimate);
-            }
-          }, args
-        );
+    const convertFunction = (args: string[], text = "Converting") =>
+      new PCancelable<void>(async (resolve, reject, onCancel) => {
+        try {
+          const process = convert(
+            "",
+            {
+              shouldTrack: false,
+              startTime: options.startTime,
+              endTime: options.endTime,
+              onProgress: (progress, estimate) => {
+                options.onProgress(text, progress, estimate);
+              },
+            },
+            args
+          );
 
-        onCancel(() => {
-          process.cancel();
-        });
-        await process;
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
+          onCancel(() => {
+            process.cancel();
+          });
+          await process;
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
 
-    const editPath = tempy.file({extension: path.extname(croppedPath)});
+    const editPath = tempy.file({ extension: path.extname(croppedPath) });
 
-    const editPlugin = plugins.editPlugins.find(plugin => {
+    const editPlugin = plugins.editPlugins.find((plugin) => {
       return plugin.name === options.editService?.pluginName;
     });
 
-    const editService = editPlugin?.editServices.find(service => {
+    const editService = editPlugin?.editServices.find((service) => {
       return service.title === options.editService?.serviceTitle;
     });
 
     if (!editService || !editPlugin) {
-      throw new Error(`Edit service ${options.editService?.serviceTitle} not found`);
+      throw new Error(
+        `Edit service ${options.editService?.serviceTitle} not found`
+      );
     }
 
     const editProcess = editService.action(
@@ -146,15 +155,15 @@ const convertWithEditPlugin = PCancelable.fn(
           fps: options.fps,
           duration: options.endTime - options.startTime,
           isMuted: options.shouldMute,
-          loop: settings.get('loopExports')
-        }
+          loop: settings.get("loopExports"),
+        },
       })
     );
 
     onCancel(() => {
       isCanceled = true;
       // @ts-expect-error
-      if (editProcess.cancel && typeof editProcess.cancel === 'function') {
+      if (editProcess.cancel && typeof editProcess.cancel === "function") {
         (editProcess as PCancelable<void>).cancel();
       }
     });
@@ -162,7 +171,7 @@ const convertWithEditPlugin = PCancelable.fn(
     await editProcess;
 
     if (isCanceled) {
-      return '';
+      return "";
     }
 
     track(`plugins/used/edit/${options.editService?.pluginName}`);
@@ -170,7 +179,7 @@ const convertWithEditPlugin = PCancelable.fn(
     const conversionProcess = options.converter({
       ...options,
       shouldCrop: false,
-      inputPath: editPath
+      inputPath: editPath,
     });
 
     onCancel(() => {

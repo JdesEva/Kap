@@ -1,67 +1,68 @@
-import delay from 'delay';
-import {app, dialog} from 'electron';
-import {openNewGitHubIssue} from 'electron-util';
-import macosRelease from '../utils/macos-release';
-import {supportedVideoExtensions} from '../common/constants';
-import {getCurrentMenuItem, MenuItemId} from './utils';
-import {openFiles} from '../utils/open-files';
-import {windowManager} from '../windows/manager';
+import delay from "delay";
+import { app, dialog } from "electron";
+import { openNewGitHubIssue } from "electron-util";
+import macosRelease from "../utils/macos-release";
+import { supportedVideoExtensions } from "../common/constants";
+import { getCurrentMenuItem, MenuItemId } from "./utils";
+import { openFiles } from "../utils/open-files";
+import { windowManager } from "../windows/manager";
+import i18n from '../i18n/i18n'
 
 export const getPreferencesMenuItem = () => ({
   id: MenuItemId.preferences,
-  label: 'Preferences…',
-  accelerator: 'Command+,',
-  click: () => windowManager.preferences?.open()
+  label: i18n.t('Preferences'),
+  accelerator: "Command+,",
+  click: () => windowManager.preferences?.open(),
 });
 
 export const getAboutMenuItem = () => ({
   id: MenuItemId.about,
-  label: `About ${app.name}`,
+  label: i18n.t("About"),
   click: () => {
     windowManager.cropper?.close();
     app.focus();
     app.showAboutPanel();
-  }
+  },
 });
 
 export const getOpenFileMenuItem = () => ({
   id: MenuItemId.openVideo,
-  label: 'Open Video…',
-  accelerator: 'Command+O',
+  label: i18n.t("OpenVideo"),
+  accelerator: "Command+O",
   click: async () => {
     windowManager.cropper?.close();
 
     await delay(200);
 
     app.focus();
-    const {canceled, filePaths} = await dialog.showOpenDialog({
-      filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
-      properties: ['openFile', 'multiSelections']
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: "Videos", extensions: supportedVideoExtensions }],
+      properties: ["openFile", "multiSelections"],
     });
 
     if (!canceled && filePaths) {
       openFiles(...filePaths);
     }
-  }
+  },
 });
 
 export const getExportHistoryMenuItem = () => ({
-  label: 'Export History',
+  label: i18n.t("ExportHistory"),
   click: () => windowManager.exports?.open(),
   enabled: getCurrentMenuItem(MenuItemId.exportHistory)?.enabled ?? false,
-  id: MenuItemId.exportHistory
+  id: MenuItemId.exportHistory,
 });
 
 export const getSendFeedbackMenuItem = () => ({
   id: MenuItemId.sendFeedback,
-  label: 'Send Feedback…',
+  label: i18n.t("SendFeedback"),
   click() {
     openNewGitHubIssue({
-      user: 'wulkano',
-      repo: 'kap',
-      body: issueBody
+      user: "wulkano",
+      repo: "kap",
+      body: issueBody,
     });
-  }
+  },
 });
 
 const release = macosRelease();
@@ -91,4 +92,3 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 
 <!-- If you have additional information, enter it below. -->
 `;
-
