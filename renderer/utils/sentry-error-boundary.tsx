@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/browser';
 import electron from 'electron';
 import type {api as Api, is as Is} from 'electron-util';
 
-const SENTRY_PUBLIC_DSN = 'https://2dffdbd619f34418817f4db3309299ce@sentry.io/255536';
+const SENTRY_PUBLIC_DSN = 'https://04c3d4bad20820a0f358028f28e04d16@o4505409681948672.ingest.sentry.io/4506432195461120';
 
 class SentryErrorBoundary extends React.Component<{children: React.ReactNode}> {
   constructor(props) {
