@@ -1,51 +1,46 @@
-import classNames from 'classnames';
-import React from 'react';
-import PropTypes from 'prop-types';
+import classNames from "classnames";
+import React from "react";
+import PropTypes from "prop-types";
+import i18n from "../../i18n";
 
-import {connect, PreferencesContainer} from '../../containers';
-import {SettingsIcon, PluginsIcon} from '../../vectors';
+import { connect, PreferencesContainer } from "../../containers";
+import { SettingsIcon, PluginsIcon } from "../../vectors";
 
-import {handleKeyboardActivation} from '../../utils/inputs';
+import { handleKeyboardActivation } from "../../utils/inputs";
 
 const CATEGORIES = [
   {
-    name: 'general',
-    icon: SettingsIcon
-  }, {
-    name: 'plugins',
-    icon: PluginsIcon
-  }
+    name: i18n.t("General"),
+    icon: SettingsIcon,
+  },
+  {
+    name: i18n.t("Plugins"),
+    icon: PluginsIcon,
+  },
 ];
 
 class PreferencesNavigation extends React.Component {
   static defaultProps = {
-    category: 'general'
+    category: "general",
   };
 
   render() {
-    const {selectCategory, category} = this.props;
+    const { selectCategory, category } = this.props;
 
     return (
       <nav className="prefs-nav">
-        {
-          CATEGORIES.map(
-            ({name, icon: Icon}) => (
-              <div
-                key={name}
-                tabIndex={0}
-                className={classNames('nav-item', {active: category === name})}
-                onClick={() => selectCategory(name)}
-                onKeyDown={handleKeyboardActivation(() => selectCategory(name))}
-              >
-                <Icon
-                  size="2.4rem"
-                  active={category === name}
-                />
-                <span>{name}</span>
-              </div>
-            )
-          )
-        }
+        {CATEGORIES.map(({ name, icon: Icon }) => (
+          <div
+            key={name}
+            tabIndex={0}
+            className={classNames("nav-item", { active: category === name })}
+            onClick={() => selectCategory(name)}
+            onKeyDown={handleKeyboardActivation(() => selectCategory(name))}
+          >
+            <Icon size="2.4rem" active={category === name} />
+            <span>{name}</span>
+          </div>
+        ))}
         <style jsx>{`
           .prefs-nav {
             height: 4.8rem;
@@ -104,11 +99,11 @@ class PreferencesNavigation extends React.Component {
 
 PreferencesNavigation.propTypes = {
   category: PropTypes.string,
-  selectCategory: PropTypes.elementType.isRequired
+  selectCategory: PropTypes.elementType.isRequired,
 };
 
 export default connect(
   [PreferencesContainer],
-  ({category}) => ({category}),
-  ({selectCategory}) => ({selectCategory})
+  ({ category }) => ({ category }),
+  ({ selectCategory }) => ({ selectCategory })
 )(PreferencesNavigation);

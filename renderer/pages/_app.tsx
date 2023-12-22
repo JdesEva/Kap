@@ -1,10 +1,11 @@
-import {AppProps} from 'next/app';
-import {useState, useEffect} from 'react';
-import useDarkMode from '../hooks/dark-mode';
-import GlobalStyles from '../utils/global-styles';
-import SentryErrorBoundary from '../utils/sentry-error-boundary';
-import {WindowStateProvider} from '../hooks/window-state';
-import classNames from 'classnames';
+import { AppProps } from "next/app";
+import { useState, useEffect } from "react";
+import useDarkMode from "../hooks/dark-mode";
+import GlobalStyles from "../utils/global-styles";
+import SentryErrorBoundary from "../utils/sentry-error-boundary";
+import { WindowStateProvider } from "../hooks/window-state";
+import classNames from "classnames";
+import '../i18n'
 
 const Kap = (props: AppProps) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,19 +18,19 @@ const Kap = (props: AppProps) => {
     return null;
   }
 
-  return <MainApp {...props}/>;
+  return <MainApp {...props} />;
 };
 
-const MainApp = ({Component, pageProps}: AppProps) => {
+const MainApp = ({ Component, pageProps }: AppProps) => {
   const isDarkMode = useDarkMode();
-  const className = classNames('cover-window', {dark: isDarkMode});
+  const className = classNames("cover-window", { dark: isDarkMode });
 
   return (
     <div className={className}>
       <SentryErrorBoundary>
         <WindowStateProvider>
-          <Component {...pageProps}/>
-          <GlobalStyles/>
+          <Component {...pageProps} />
+          <GlobalStyles />
         </WindowStateProvider>
       </SentryErrorBoundary>
     </div>

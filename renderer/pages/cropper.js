@@ -1,14 +1,12 @@
-import electron from 'electron';
-import React from 'react';
-import {Provider} from 'unstated';
-
-import Overlay from '../components/cropper/overlay';
-import Cropper from '../components/cropper';
-import ActionBar from '../components/action-bar';
-
-import CursorContainer from '../containers/cursor';
-import CropperContainer from '../containers/cropper';
-import ActionBarContainer from '../containers/action-bar';
+import electron from "electron";
+import React from "react";
+import { Provider } from "unstated";
+import Overlay from "../components/cropper/overlay";
+import Cropper from "../components/cropper";
+import ActionBar from "../components/action-bar";
+import CursorContainer from "../containers/cursor";
+import CropperContainer from "../containers/cropper";
+import ActionBarContainer from "../containers/action-bar";
 
 const cursorContainer = new CursorContainer();
 const cropperContainer = new CropperContainer();
@@ -33,32 +31,32 @@ export default class CropperPage extends React.Component {
       return;
     }
 
-    const {ipcRenderer, remote} = electron;
+    const { ipcRenderer, remote } = electron;
 
-    ipcRenderer.on('display', (_, display) => {
+    ipcRenderer.on("display", (_, display) => {
       cropperContainer.setDisplay(display);
       actionBarContainer.setDisplay(display);
     });
 
-    ipcRenderer.on('select-app', (_, app) => {
+    ipcRenderer.on("select-app", (_, app) => {
       cropperContainer.selectApp(app);
       cropperContainer.setActive(true);
     });
 
-    ipcRenderer.on('blur', () => {
+    ipcRenderer.on("blur", () => {
       cropperContainer.setActive(false);
     });
 
-    ipcRenderer.on('start-recording', () => {
+    ipcRenderer.on("start-recording", () => {
       cropperContainer.setRecording();
     });
 
     const window = remote.getCurrentWindow();
-    window.on('focus', () => {
+    window.on("focus", () => {
       cropperContainer.setActive(true);
     });
 
-    window.on('blur', event => {
+    window.on("blur", (event) => {
       if (!event.defaultPrevented) {
         cropperContainer.setActive(false);
       }
@@ -66,34 +64,34 @@ export default class CropperPage extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyEvent);
-    document.addEventListener('keyup', this.handleKeyEvent);
+    document.addEventListener("keydown", this.handleKeyEvent);
+    document.addEventListener("keyup", this.handleKeyEvent);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyEvent);
-    document.removeEventListener('keyup', this.handleKeyEvent);
+    document.removeEventListener("keydown", this.handleKeyEvent);
+    document.removeEventListener("keyup", this.handleKeyEvent);
   }
 
-  handleKeyEvent = event => {
+  handleKeyEvent = (event) => {
     switch (event.key) {
-      case 'Escape':
+      case "Escape":
         this.remote.getCurrentWindow().close();
         break;
-      case 'Shift':
-        if (event.type === 'keydown' && !event.defaultPrevented) {
+      case "Shift":
+        if (event.type === "keydown" && !event.defaultPrevented) {
           lastRatioLockState = actionBarContainer.state.ratioLocked;
           actionBarContainer.toggleRatioLock(true);
-        } else if (event.type === 'keyup' && lastRatioLockState !== null) {
+        } else if (event.type === "keyup" && lastRatioLockState !== null) {
           actionBarContainer.toggleRatioLock(lastRatioLockState);
           lastRatioLockState = null;
         }
 
         break;
-      case 'Alt':
-        cropperContainer.toggleResizeFromCenter(event.type === 'keydown');
+      case "Alt":
+        cropperContainer.toggleResizeFromCenter(event.type === "keydown");
         break;
-      case 'i':
+      case "i":
         this.remote.getCurrentWindow().setIgnoreMouseEvents(true);
         this.dev = !this.dev;
         break;
@@ -105,10 +103,12 @@ export default class CropperPage extends React.Component {
   render() {
     return (
       <div className="cover-screen">
-        <Provider inject={[cursorContainer, cropperContainer, actionBarContainer]}>
+        <Provider
+          inject={[cursorContainer, cropperContainer, actionBarContainer]}
+        >
           <Overlay>
-            <Cropper/>
-            <ActionBar/>
+            <Cropper />
+            <ActionBar />
           </Overlay>
         </Provider>
         <style jsx global>{`
@@ -120,7 +120,8 @@ export default class CropperPage extends React.Component {
             height: 100vh;
             user-select: none;
             display: flex;
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+              sans-serif;
           }
 
           .content {
@@ -159,16 +160,32 @@ export default class CropperPage extends React.Component {
           }
 
           :root {
-            --action-bar-box-shadow: 0 20px 40px 0 rgba(0, 0, 0, .2);
+            --action-bar-box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.2);
             --action-bar-background: #ffffff;
             --action-bar-border: none;
 
             --record-button-border-color: var(--red);
-            --record-button-background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
-            --record-button-focus-background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
-            --record-button-focus-background-cropper: var(--record-button-focus-background);
+            --record-button-background: #ff6059
+              radial-gradient(
+                ellipse 100% 0% at 50% 0%,
+                #ff6159 0%,
+                #ff5f52 50%,
+                #ff3a30 100%
+              );
+            --record-button-focus-background: #ff6059
+              radial-gradient(
+                ellipse 100% 0% at 50% 0%,
+                #ff6159 0%,
+                #ff5f52 50%,
+                #ff3a30 100%
+              );
+            --record-button-focus-background-cropper: var(
+              --record-button-focus-background
+            );
             --record-button-focus-outter-background: #ffffff;
-            --record-button-focus-outter-border: var(--record-button-border-color);
+            --record-button-focus-outter-border: var(
+              --record-button-border-color
+            );
             --record-button-ripple-color: var(--red);
             --record-button-fill-background: var(--record-button-background);
             --record-button-inner-background: #fff;

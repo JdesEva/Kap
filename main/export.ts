@@ -23,7 +23,7 @@ import { askForTargetFilePath } from "./plugins/built-in/save-file-plugin";
 import path from "path";
 import { ensureDockIsShowingSync } from "./utils/dock";
 import { windowManager } from "./windows/manager";
-import i18n from "./i18n/i18n";
+import i18n from "./i18n";
 
 export interface ExportOptions {
   plugin: InstalledPlugin;

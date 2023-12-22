@@ -12,7 +12,7 @@ import { getAudioDevices, getDefaultInputDevice } from "../utils/devices";
 import { settings } from "../common/settings";
 import { defaultInputDeviceId } from "../common/constants";
 import { hasMicrophoneAccess } from "../common/system-permissions";
-import i18n from "../i18n/i18n";
+import i18n from "../i18n";
 
 const getCogMenuTemplate = async (): Promise<MenuOptions> => [
   getAboutMenuItem(),

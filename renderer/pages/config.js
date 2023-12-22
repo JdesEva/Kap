@@ -1,37 +1,36 @@
-import React from 'react';
-import {Provider} from 'unstated';
-import {ipcRenderer as ipc} from 'electron-better-ipc';
-
-import {ConfigContainer} from '../containers';
-import Config from '../components/config';
-import WindowHeader from '../components/window-header';
+import React from "react";
+import { Provider } from "unstated";
+import { ipcRenderer as ipc } from "electron-better-ipc";
+import { ConfigContainer } from "../containers";
+import Config from "../components/config";
+import WindowHeader from "../components/window-header";
 
 const configContainer = new ConfigContainer();
 
 export default class ConfigPage extends React.Component {
-  state = {title: ''};
+  state = { title: "" };
 
   componentDidMount() {
-    ipc.answerMain('plugin', pluginName => {
+    ipc.answerMain("plugin", (pluginName) => {
       configContainer.setPlugin(pluginName);
-      this.setState({title: pluginName.replace(/^kap-/, '')});
+      this.setState({ title: pluginName.replace(/^kap-/, "") });
     });
 
-    ipc.answerMain('edit-service', ({pluginName, serviceTitle}) => {
+    ipc.answerMain("edit-service", ({ pluginName, serviceTitle }) => {
       configContainer.setEditService(pluginName, serviceTitle);
-      this.setState({title: serviceTitle});
+      this.setState({ title: serviceTitle });
     });
   }
 
   render() {
-    const {title} = this.state;
+    const { title } = this.state;
 
     return (
       <div className="root">
         <div className="cover-window">
           <Provider inject={[configContainer]}>
-            <WindowHeader title={title}/>
-            <Config/>
+            <WindowHeader title={title} />
+            <Config />
           </Provider>
         </div>
         <style jsx global>{`
@@ -45,7 +44,8 @@ export default class ConfigPage extends React.Component {
             margin: 0;
             width: 100vw;
             height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+              sans-serif;
           }
 
           :root {
@@ -66,7 +66,7 @@ export default class ConfigPage extends React.Component {
             font-size: 1.4rem;
             line-height: 1.5em;
             -webkit-font-smoothing: antialiased;
-            letter-spacing: -.01rem;
+            letter-spacing: -0.01rem;
             cursor: default;
           }
         `}</style>

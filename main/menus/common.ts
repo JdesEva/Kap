@@ -6,7 +6,7 @@ import { supportedVideoExtensions } from "../common/constants";
 import { getCurrentMenuItem, MenuItemId } from "./utils";
 import { openFiles } from "../utils/open-files";
 import { windowManager } from "../windows/manager";
-import i18n from '../i18n/i18n'
+import i18n from '../i18n'
 
 export const getPreferencesMenuItem = () => ({
   id: MenuItemId.preferences,

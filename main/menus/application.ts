@@ -7,7 +7,7 @@ import {
   getSendFeedbackMenuItem,
 } from "./common";
 import { MenuItemId, MenuOptions } from "./utils";
-import i18n from '../i18n/i18n'
+import i18n from '../i18n'
 
 const getAppMenuItem = () => {
   const appMenuItem = appMenu([getPreferencesMenuItem()]);

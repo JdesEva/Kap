@@ -6,7 +6,7 @@ import {
   getCurrentDurationStart,
   getOverallDuration,
 } from "../utils/track-duration";
-import i18n from "../i18n/i18n";
+import i18n from "../i18n";
 
 const getDurationLabel = () => {
   if (getCurrentDurationStart() <= 0) {

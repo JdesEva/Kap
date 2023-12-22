@@ -1,19 +1,19 @@
-import Head from 'next/head';
+import Head from "next/head";
 // Import EditorPreview from '../components/editor/editor-preview';
-import combineUnstatedContainers from '../utils/combine-unstated-containers';
-import VideoMetadataContainer from '../components/editor/video-metadata-container';
-import VideoTimeContainer from '../components/editor/video-time-container';
-import VideoControlsContainer from '../components/editor/video-controls-container';
-import OptionsContainer from '../components/editor/options-container';
-import useEditorWindowState from 'hooks/editor/use-editor-window-state';
-import {ConversionIdContextProvider} from 'hooks/editor/use-conversion-id';
-import Editor from 'components/editor';
+import combineUnstatedContainers from "../utils/combine-unstated-containers";
+import VideoMetadataContainer from "../components/editor/video-metadata-container";
+import VideoTimeContainer from "../components/editor/video-time-container";
+import VideoControlsContainer from "../components/editor/video-controls-container";
+import OptionsContainer from "../components/editor/options-container";
+import useEditorWindowState from "hooks/editor/use-editor-window-state";
+import { ConversionIdContextProvider } from "hooks/editor/use-conversion-id";
+import Editor from "components/editor";
 
 const ContainerProvider = combineUnstatedContainers([
   OptionsContainer,
   VideoMetadataContainer,
   VideoTimeContainer,
-  VideoControlsContainer
+  VideoControlsContainer,
 ]) as any;
 
 const EditorPage = () => {
@@ -26,11 +26,11 @@ const EditorPage = () => {
   return (
     <div className="cover-window">
       <Head>
-        <meta httpEquiv="Content-Security-Policy" content="media-src file:;"/>
+        <meta httpEquiv="Content-Security-Policy" content="media-src file:;" />
       </Head>
       <ConversionIdContextProvider>
         <ContainerProvider>
-          <Editor/>
+          <Editor />
         </ContainerProvider>
       </ConversionIdContextProvider>
       <style jsx global>{`
@@ -53,10 +53,12 @@ const EditorPage = () => {
 
         .preview-hover-container:not(:hover) .progress-bar-container {
           bottom: 64px;
-          width: 100%
+          width: 100%;
         }
 
-        .preview-hover-container:not(:hover) .progress-bar-container .progress-bar {
+        .preview-hover-container:not(:hover)
+          .progress-bar-container
+          .progress-bar {
           border-radius: 0;
         }
 

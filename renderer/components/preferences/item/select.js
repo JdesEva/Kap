@@ -1,15 +1,15 @@
-import electron from 'electron';
-import PropTypes from 'prop-types';
-import React from 'react';
-
-import {DropdownArrowIcon} from '../../../vectors';
-import {handleKeyboardActivation} from '../../../utils/inputs';
+import electron from "electron";
+import PropTypes from "prop-types";
+import React from "react";
+import { DropdownArrowIcon } from "../../../vectors";
+import { handleKeyboardActivation } from "../../../utils/inputs";
+import i18n from "../../../i18n";
 
 class Select extends React.Component {
   static defaultProps = {
     options: [],
-    placeholder: 'Select',
-    noOptionsMessage: 'No options'
+    placeholder: i18n.t("Select"),
+    noOptionsMessage: i18n.t("SelectEmpty"),
   };
 
   constructor(props) {
@@ -20,27 +20,27 @@ class Select extends React.Component {
   state = {};
 
   static getDerivedStateFromProps(nextProps) {
-    const {options, onSelect, selected} = nextProps;
+    const { options, onSelect, selected } = nextProps;
 
     if (!electron.remote || options.length === 0) {
       return {};
     }
 
-    const {Menu, MenuItem} = electron.remote;
+    const { Menu, MenuItem } = electron.remote;
     const menu = new Menu();
 
     for (const option of options) {
       menu.append(
         new MenuItem({
           label: option.label,
-          type: 'radio',
+          type: "radio",
           checked: option.value === selected,
-          click: () => onSelect(option.value)
+          click: () => onSelect(option.value),
         })
       );
     }
 
-    return {menu};
+    return { menu };
   }
 
   handleClick = () => {
@@ -49,17 +49,21 @@ class Select extends React.Component {
 
       this.state.menu.popup({
         x: Math.round(boundingRect.left),
-        y: Math.round(boundingRect.top)
+        y: Math.round(boundingRect.top),
       });
     }
   };
 
   render() {
-    const {options, selected, placeholder, noOptionsMessage, tabIndex, full} = this.props;
+    const { options, selected, placeholder, noOptionsMessage, tabIndex, full } =
+      this.props;
 
-    const selectedLabel = options.length === 0 ? noOptionsMessage : (
-      selected === undefined ? placeholder : options.find(option => option.value === selected).label
-    );
+    const selectedLabel =
+      options.length === 0
+        ? noOptionsMessage
+        : selected === undefined
+        ? placeholder
+        : options.find((option) => option.value === selected).label;
 
     return (
       <div
@@ -67,18 +71,18 @@ class Select extends React.Component {
         tabIndex={tabIndex}
         className="select"
         onClick={this.handleClick}
-        onKeyDown={handleKeyboardActivation(this.handleClick, {isMenu: true})}
+        onKeyDown={handleKeyboardActivation(this.handleClick, { isMenu: true })}
       >
         <span>{selectedLabel}</span>
         <div className="dropdown">
-          <DropdownArrowIcon size="15px"/>
+          <DropdownArrowIcon size="15px" />
         </div>
         <style jsx>{`
           .select {
             background: var(--input-background-color);
             border: 1px solid var(--input-border-color);
             border-radius: 4px;
-            height: ${full ? '32px' : '2.4rem'};
+            height: ${full ? "32px" : "2.4rem"};
             transition: border 0.12s ease-in-out;
             display: flex;
             align-items: center;
@@ -86,8 +90,8 @@ class Select extends React.Component {
             user-select: none;
             line-height: 2.4rem;
             position: relative;
-            width: ${full ? '100%' : '92px'};
-            margin-top: ${full ? '8px' : '0px'};
+            width: ${full ? "100%" : "92px"};
+            margin-top: ${full ? "8px" : "0px"};
             color: var(--title-color);
             outline: none;
             box-shadow: var(--input-shadow);
@@ -126,16 +130,18 @@ class Select extends React.Component {
 }
 
 Select.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.any
-  })),
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.any,
+    })
+  ),
   onSelect: PropTypes.elementType.isRequired,
   selected: PropTypes.any,
   placeholder: PropTypes.string,
   noOptionsMessage: PropTypes.string,
   tabIndex: PropTypes.number.isRequired,
-  full: PropTypes.bool
+  full: PropTypes.bool,
 };
 
 export default Select;
