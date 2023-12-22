@@ -2,6 +2,7 @@ import { ShareServiceContext } from "../service-context";
 import path from "path";
 import { getFormatExtension } from "../../common/constants";
 import { Format } from "../../common/types";
+import i18n from "../../i18n";
 
 const { getAppsThatOpenExtension, openFileWithApp } = require("mac-open-with");
 
@@ -45,7 +46,7 @@ export const apps = new Map(
 
 export const shareServices = [
   {
-    title: "Open With",
+    title: i18n.t("OpenWith"),
     formats: [...apps.keys()],
     action,
   },

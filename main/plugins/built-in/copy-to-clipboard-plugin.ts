@@ -1,5 +1,6 @@
 import { clipboard } from "electron";
 import { ShareServiceContext } from "../service-context";
+import i18n from "../../i18n";
 
 const plist = require("plist");
 
@@ -19,7 +20,7 @@ const action = async (context: ShareServiceContext) => {
 };
 
 const copyToClipboard = {
-  title: "Copy to Clipboard",
+  title: i18n.t("CopyToClipboard"),
   formats: ["gif", "apng", "mp4"],
   action,
 };

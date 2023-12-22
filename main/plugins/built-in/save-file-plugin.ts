@@ -6,6 +6,7 @@ import { settings } from "../../common/settings";
 import makeDir from "make-dir";
 import { Format } from "../../common/types";
 import path from "path";
+import i18n from "../../i18n";
 
 const { Notification, shell } = require("electron");
 const cpFile = require("cp-file");
@@ -25,8 +26,8 @@ const action = async (
   await cpFile(temporaryFilePath, context.targetFilePath);
 
   const notification = new Notification({
-    title: "File saved successfully!",
-    body: "Click to show the file in Finder",
+    title: i18n.t("SaveToDiskTitle"),
+    body: i18n.t("SaveToDiskTitleInfo"),
   });
 
   notification.on("click", () => {
@@ -37,7 +38,7 @@ const action = async (
 };
 
 const saveFile = {
-  title: "Save to Disk",
+  title: i18n.t("SaveToDisk"),
   formats: ["gif", "mp4", "webm", "apng", "av1", "hevc"],
   action,
 };

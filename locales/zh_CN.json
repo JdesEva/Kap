@@ -56,6 +56,11 @@
     "PluginsUnSupported": "此插件不可用",
     "PluginsConfiguration": "此插件需要配置",
     "PluginsKapVersion": "要求应用版本",
-    "PluginsMacVersion": "要求 macOS 版本"
+    "PluginsMacVersion": "要求 macOS 版本",
+    "OpenWith": "打开方式",
+    "CopyToClipboard": "复制到剪贴板",
+    "SaveToDisk": "保存到硬盘",
+    "SaveToDiskTitle": "文件保存成功！",
+    "SaveToDiskTitleInfo": "打开文件保存位置"
   }
 }

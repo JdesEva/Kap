@@ -56,6 +56,11 @@
     "PluginsUnSupported": "This plugin is not supported.",
     "PluginsConfiguration": "This plugin requires configuration",
     "PluginsKapVersion": "Requires Kap version",
-    "PluginsMacVersion": "Requires macOS version"
+    "PluginsMacVersion": "Requires macOS version",
+    "OpenWith": "Open With",
+    "CopyToClipboard": "Copy to Clipboard",
+    "SaveToDisk": "Save to Disk",
+    "SaveToDiskTitle": "File saved successfully!",
+    "SaveToDiskTitleInfo": "Click to show the file in Finder"
   }
 }
