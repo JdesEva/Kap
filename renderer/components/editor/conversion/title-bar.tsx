@@ -7,6 +7,7 @@ import {ExportStatus} from '../../../common/types';
 import {useMemo} from 'react';
 import {template} from 'lodash';
 import IconMenu from '../../icon-menu';
+import i18n from '../../../i18n';
 
 const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any; showInFolder: () => void}) => {
   const {api} = require('electron-util');
@@ -14,7 +15,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
     if (conversion.status === ExportStatus.inProgress && !flags.get('backgroundEditorConversion')) {
       await api.dialog.showMessageBox(remote.getCurrentWindow(), {
         type: 'info',
-        message: 'Your export will continue in the background. You can access it through the Export History window.',
+        message: i18n.t('ExportWillContinueInBackground'),
         buttons: ['Ok'],
         defaultId: 0
       });
@@ -29,7 +30,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
 
     if (conversion?.canCopy) {
       template.push({
-        label: 'Copy',
+        label: i18n.t('CopyToClipboard'),
         click: () => copy()
       }, {
         type: 'separator'
@@ -38,7 +39,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
 
     if (conversion?.status === ExportStatus.completed) {
       template.push({
-        label: 'Show in Finder',
+        label: i18n.t('ShowInFinder'),
         click: () => showInFolder()
       });
     }
@@ -57,7 +58,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
         </div>
       </div>
       <div className="right">
-        {canRetry && <div className="button" onClick={retry}>Retry</div>}
+        {canRetry && <div className="button" onClick={retry}>{i18n.t('Retry')}</div>}
         {
           menuTemplate.length > 0 && (
             <div className="icon">

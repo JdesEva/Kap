@@ -23,6 +23,7 @@ import {
 import { Recording } from "./video";
 import { ApertureOptions, StartRecordingOptions } from "./common/types";
 import { InstalledPlugin } from "./plugins/plugin";
+import i18n from "./i18n";
 import { RecordService, RecordServiceHook } from "./plugins/service";
 import {
   getCurrentDurationStart,
@@ -81,7 +82,7 @@ const callPlugins = async (method: RecordServiceHook) =>
           );
         } catch (error) {
           showError(error as any, {
-            title: `Something went wrong while using the plugin “${plugin.prettyName}”`,
+            title: i18n.t('PluginErrorTitle', {pluginName: plugin.prettyName}),
             plugin,
           });
         }
@@ -178,7 +179,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
     });
   } catch (error) {
     track("recording/stopped/error");
-    showError(error as any, { title: "Recording error", plugin: undefined });
+    showError(error as any, { title: i18n.t('RecordingError'), plugin: undefined });
     past = undefined;
     cleanup();
     return;
@@ -229,7 +230,7 @@ export const stopRecording = async () => {
     setCurrentDurationStart(0);
   } catch (error) {
     track("recording/stopped/error");
-    showError(error as any, { title: "Recording error", plugin: undefined });
+    showError(error as any, { title: i18n.t('RecordingError'), plugin: undefined });
     cleanup();
     return;
   }
@@ -265,7 +266,7 @@ export const stopRecordingWithNoEdit = async () => {
     setCurrentDurationStart(0);
   } catch (error) {
     track("recording/quit/error");
-    showError(error as any, { title: "Recording error", plugin: undefined });
+    showError(error as any, { title: i18n.t('RecordingError'), plugin: undefined });
     cleanup();
     return;
   }
@@ -296,7 +297,7 @@ export const pauseRecording = async () => {
     console.log(`Paused recording after ${(Date.now() - past) / 1000}s`);
   } catch (error) {
     track("recording/paused/error");
-    showError(error as any, { title: "Recording error", plugin: undefined });
+    showError(error as any, { title: i18n.t('RecordingError'), plugin: undefined });
     cleanup();
   }
 };
@@ -316,7 +317,7 @@ export const resumeRecording = async () => {
     console.log(`Resume recording after ${(Date.now() - past) / 1000}s`);
   } catch (error) {
     track("recording/resumed/error");
-    showError(error as any, { title: "Recording error", plugin: undefined });
+    showError(error as any, { title: i18n.t('RecordingError'), plugin: undefined });
     cleanup();
   }
 };

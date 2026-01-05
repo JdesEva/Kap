@@ -1,5 +1,6 @@
 import electron from 'electron';
 import _ from 'lodash';
+import i18n from '../i18n';
 
 let screenWidth = 0;
 let screenHeight = 0;
@@ -158,12 +159,12 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
   }
 
   const customOption = RATIOS.includes(selectedRatio) ? {
-    label: 'Custom',
+    label: i18n.t('Custom'),
     type: 'radio',
     checked: false,
     enabled: false
   } : {
-    label: `Custom ${selectedRatio}`,
+    label: `${i18n.t('Custom')} ${selectedRatio}`,
     type: 'radio',
     checked: true
   };

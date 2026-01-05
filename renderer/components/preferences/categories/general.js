@@ -36,7 +36,6 @@ class General extends React.Component {
     const {
       kapturesDir,
       openOnStartup,
-      allowAnalytics,
       showCursor,
       highlightClicks,
       record60fps,
@@ -175,17 +174,6 @@ class General extends React.Component {
           />
         </Item>
         <Item
-          key="allowAnalytics"
-          title={i18n.t("AllowAnalytics")}
-          subtitle={i18n.t("AllowAnalyticsInfo")}
-        >
-          <Switch
-            tabIndex={tabIndex}
-            checked={allowAnalytics}
-            onClick={() => toggleSetting("allowAnalytics")}
-          />
-        </Item>
-        <Item
           key="openOnStartup"
           title={i18n.t("StartAutomatically")}
           subtitle={i18n.t("StartAutomaticallyInfo")}
@@ -239,7 +227,6 @@ General.propTypes = {
   recordAudio: PropTypes.bool,
   kapturesDir: PropTypes.string,
   openOnStartup: PropTypes.bool,
-  allowAnalytics: PropTypes.bool,
   loopExports: PropTypes.bool,
   pickKapturesDir: PropTypes.elementType.isRequired,
   setOpenOnStartup: PropTypes.elementType.isRequired,
@@ -263,7 +250,6 @@ export default connect(
     audioDevices,
     kapturesDir,
     openOnStartup,
-    allowAnalytics,
     loopExports,
     category,
     lossyCompression,
@@ -279,7 +265,6 @@ export default connect(
     audioDevices,
     kapturesDir,
     openOnStartup,
-    allowAnalytics,
     loopExports,
     category,
     lossyCompression,

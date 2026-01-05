@@ -4,6 +4,7 @@ const {
   hasPromptedForPermission,
 } = require("mac-screen-capture-permissions");
 const { ensureDockIsShowing } = require("../utils/dock");
+import i18n from "../i18n";
 
 let isDialogShowing = false;
 
@@ -22,7 +23,7 @@ const promptSystemPreferences =
     await ensureDockIsShowing(async () => {
       const { response } = await dialog.showMessageBox({
         type: "warning",
-        buttons: ["Open System Preferences", "Cancel"],
+        buttons: [i18n.t("OpenSystemPreferences"), i18n.t("Cancel")],
         defaultId: 0,
         message: options.message,
         detail: options.detail,
@@ -50,9 +51,8 @@ const getMicrophoneAccess = () =>
   systemPreferences.getMediaAccessStatus("microphone");
 
 const microphoneFallback = promptSystemPreferences({
-  message: "Kap cannot access the microphone.",
-  detail:
-    "Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, launch Kap for the changes to take effect.",
+  message: i18n.t("CannotAccessMicrophone"),
+  detail: i18n.t("CannotAccessMicrophoneDetail"),
   systemPreferencesPath: "Privacy_Microphone",
 });
 
@@ -83,9 +83,8 @@ export const hasMicrophoneAccess = () => getMicrophoneAccess() === "granted";
 // Screen Capture (10.15 and newer)
 
 const screenCaptureFallback = promptSystemPreferences({
-  message: "Kap cannot record the screen.",
-  detail:
-    "Kap requires screen capture access to be able to record the screen. You can grant this in the System Preferences. Afterwards, launch Kap for the changes to take effect.",
+  message: i18n.t("CannotRecordScreen"),
+  detail: i18n.t("CannotRecordScreenDetail"),
   systemPreferencesPath: "Privacy_ScreenCapture",
 });
 

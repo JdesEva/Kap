@@ -11,6 +11,7 @@ import {notify} from '../utils/notifications';
 import packageJson from 'package-json';
 import {NormalizedPackageJson} from 'read-pkg';
 import {windowManager} from '../windows/manager';
+import i18n from '../i18n';
 
 const got = require('got');
 
@@ -68,15 +69,15 @@ export class Plugins extends EventEmitter {
       const openConfig = () => plugin.openConfig();
 
       const options = (isValid && !hasConfig) ? {
-        title: 'Plugin installed',
-        body: `"${plugin.prettyName}" is ready for use`
+        title: i18n.t('PluginInstalled'),
+        body: i18n.t('PluginReadyForUse', {pluginName: plugin.prettyName})
       } : {
-        title: plugin.isValid ? 'Plugin installed' : 'Configure plugin',
-        body: `"${plugin.prettyName}" ${plugin.isValid ? 'can be configured' : 'requires configuration'}`,
+        title: plugin.isValid ? i18n.t('PluginInstalled') : i18n.t('ConfigurePlugin'),
+        body: plugin.isValid ? i18n.t('PluginCanBeConfigured', {pluginName: plugin.prettyName}) : i18n.t('PluginRequiresConfiguration', {pluginName: plugin.prettyName}),
         click: openConfig,
         actions: [
-          {type: 'button' as const, text: 'Configure', action: openConfig},
-          {type: 'button' as const, text: 'Later'}
+          {type: 'button' as const, text: i18n.t('Configure'), action: openConfig},
+          {type: 'button' as const, text: i18n.t('Later')}
         ]
       };
 

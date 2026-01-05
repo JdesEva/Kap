@@ -7,6 +7,7 @@ import {is} from 'electron-util';
 import fs from 'fs';
 import {saveSnapshot} from '../utils/image-preview';
 import {windowManager} from './manager';
+import i18n from '../i18n';
 
 const pify = require('pify');
 
@@ -68,7 +69,7 @@ const open = async (video: Video) => {
           submenu.splice(index + 1, 0, {
             type: 'separator'
           }, {
-            label: 'Save Original…',
+            label: i18n.t('SaveOriginal'),
             id: MenuItemId.saveOriginal,
             accelerator: 'Command+S',
             click: async () => saveOriginal(video)
@@ -89,13 +90,13 @@ const open = async (video: Video) => {
       const buttonIndex = dialog.showMessageBoxSync(editorWindow, {
         type: 'question',
         buttons: [
-          'Discard',
-          'Cancel'
+          i18n.t('Discard'),
+          i18n.t('Cancel')
         ],
         defaultId: 0,
         cancelId: 1,
-        message: 'Are you sure that you want to discard this recording?',
-        detail: 'You will no longer be able to edit and export the original recording.'
+        message: i18n.t('DiscardRecordingMessage'),
+        detail: i18n.t('DiscardRecordingDetail')
       });
 
       if (buttonIndex === 1) {

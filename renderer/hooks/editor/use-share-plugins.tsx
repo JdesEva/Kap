@@ -2,6 +2,7 @@ import OptionsContainer from 'components/editor/options-container';
 import {remote} from 'electron';
 import {ipcRenderer} from 'electron-better-ipc';
 import {useMemo} from 'react';
+import i18n from '../../i18n';
 
 const useSharePlugins = () => {
   const {
@@ -42,7 +43,7 @@ const useSharePlugins = () => {
             app: plugin.apps[0]
           },
           checked: sharePlugin.pluginName === plugin.pluginName,
-          label: 'Open With…'
+          label: i18n.t('OpenWithEllipsis')
         };
       }
 
@@ -64,7 +65,7 @@ const useSharePlugins = () => {
       options?.push({
         separator: true
       } as any, {
-        label: 'Get Plugins…',
+        label: i18n.t('GetPluginsEllipsis'),
         checked: false,
         click: () => {
           ipcRenderer.callMain('open-preferences', {category: 'plugins', tab: 'discover'});

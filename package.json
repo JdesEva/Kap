@@ -12,7 +12,7 @@
     "url": "https://wulkano.com"
   },
   "private": true,
-  "main": "dist-js/index.js",
+  "main": "dist-js/main/index.js",
   "scripts": {
     "lint": "xo",
     "lint:fix": "xo --fix",
@@ -22,9 +22,12 @@
     "start": "tsc && run-electron .",
     "build-main": "tsc",
     "build-renderer": "next build renderer && next export renderer",
-    "build": "yarn build-main && yarn build-renderer && yarn sentry:sourcemaps",
+    "build": "yarn build-main && yarn build-renderer && (yarn sentry:sourcemaps || echo 'Skipping Sentry sourcemaps (authentication not configured)')",
+    "build:local": "yarn build-main && yarn build-renderer",
     "dist": "npm run build && electron-builder",
+    "dist:local": "npm run build:local && electron-builder",
     "pack": "npm run build && electron-builder --dir",
+    "pack:local": "npm run build:local && electron-builder --dir",
     "postinstall": "electron-builder install-app-deps",
     "sentry-version": "echo \"$npm_package_name@$npm_package_version\"",
     "dev": "next dev renderer",

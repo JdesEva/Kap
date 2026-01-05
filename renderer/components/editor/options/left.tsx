@@ -7,6 +7,7 @@ import * as stringMath from 'string-math';
 import VideoMetadataContainer from '../video-metadata-container';
 import {shake} from '../../../utils/inputs';
 import Select, {Separator} from './select';
+import i18n from '../../../i18n';
 
 const percentValues = [100, 75, 50, 33, 25, 20, 10];
 
@@ -131,7 +132,7 @@ const LeftOptions = () => {
       const adjustedHeight = Math[ratio > 1 ? 'ceil' : 'floor'](adjustedWidth / ratio);
 
       return {
-        label: `${adjustedWidth} x ${adjustedHeight} (${percent === 100 ? 'Original' : `${percent}%`})`,
+        label: `${adjustedWidth} x ${adjustedHeight} (${percent === 100 ? i18n.t('Original') : `${percent}%`})`,
         value: {width: adjustedWidth, height: adjustedHeight},
         checked: width === adjustedWidth
       };
@@ -140,7 +141,7 @@ const LeftOptions = () => {
     if (options.every(opt => !opt.checked)) {
       return [
         {
-          label: 'Custom',
+          label: i18n.t('Custom'),
           value: {width, height},
           checked: true
         },
@@ -164,7 +165,7 @@ const LeftOptions = () => {
 
   return (
     <div className="container">
-      <div className="label">Size</div>
+      <div className="label">{i18n.t('Size')}</div>
       <KeyboardNumberInput
         className={keyboardInputClass}
         value={widthValue || ''}
@@ -188,7 +189,7 @@ const LeftOptions = () => {
       <div className="percent">
         <Select options={percentOptions as any} customLabel={percentLabel} onChange={selectPercentage}/>
       </div>
-      <div className="label">FPS</div>
+      <div className="label">{i18n.t('FPS')}</div>
       <div className="fps">
         <Slider value={fps} min={5} max={originalFps} onChange={updateFps}/>
       </div>

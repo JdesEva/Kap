@@ -9,6 +9,7 @@ import {notify} from './utils/notifications';
 import PCancelable from 'p-cancelable';
 import prettyBytes from 'pretty-bytes';
 import TypedEventEmitter from 'typed-emitter';
+import i18n from './i18n';
 
 const plist = require('plist');
 
@@ -65,7 +66,7 @@ export default class Conversion extends (EventEmitter as new () => TypedEventEmi
   copy = () => {
     clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(plist.build([this.convertedFilePath])));
     notify({
-      body: 'The file has been copied to the clipboard',
+      body: i18n.t('FileCopiedToClipboard'),
       title: app.name
     });
   };

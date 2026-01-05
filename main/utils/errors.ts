@@ -11,6 +11,7 @@ import macosRelease from './macos-release';
 import {windowManager} from '../windows/manager';
 import Sentry, {isSentryEnabled} from './sentry';
 import {InstalledPlugin} from '../plugins/plugin';
+import i18n from '../i18n';
 
 const MAX_RETRIES = 10;
 
@@ -105,9 +106,9 @@ export const showError = async (
   }
 
   const mainButtons = [
-    'Don\'t Report',
+    i18n.t('DontReport'),
     {
-      label: 'Copy Error',
+      label: i18n.t('CopyError'),
       action: () => {
         clipboard.writeText(`${title}\n${detail}`);
       }
@@ -117,7 +118,7 @@ export const showError = async (
   // If it's a plugin error, offer to open an issue on the plugin repo (if known)
   if (plugin) {
     const openIssueButton = plugin.repoUrl && {
-      label: 'Open Issue',
+      label: i18n.t('OpenIssue'),
       action: () => {
         openNewGitHubIssue({
           repoUrl: plugin.repoUrl,
@@ -143,25 +144,25 @@ export const showError = async (
     const eventId = Sentry.captureException(ensuredError);
     const sentryIssuePromise = getSentryIssue(eventId);
 
-    message = 'Reporting this issue will help us track it better and resolve it faster.';
+    message = i18n.t('ReportingIssueMessage');
 
     buttons.push({
-      label: 'Collect Info and Report',
-      activeLabel: 'Collecting Info…',
+      label: i18n.t('CollectInfoAndReport'),
+      activeLabel: i18n.t('CollectingInfo'),
       action: async (_: unknown, updateUi: any) => {
         const issue = await sentryIssuePromise;
 
         if (!issue || 'error' in issue) {
           updateUi({
-            message: 'Something went wrong while collecting the information.',
+            message: i18n.t('SomethingWentWrongCollecting'),
             buttons: mainButtons
           });
         } else if ('ghUrl' in issue) {
           updateUi({
-            message: 'This issue is already being tracked!',
+            message: i18n.t('IssueAlreadyTracked'),
             buttons: [
               ...mainButtons, {
-                label: 'View Issue',
+                label: i18n.t('ViewIssue'),
                 action: async () => shell.openExternal(issue.ghUrl)
               }
             ]
@@ -171,7 +172,7 @@ export const showError = async (
             buttons: [
               ...mainButtons,
               {
-                label: 'Open Issue',
+                label: i18n.t('OpenIssue'),
                 action: () => {
                   openNewGitHubIssue({
                     user: 'wulkano',
@@ -201,10 +202,10 @@ export const showError = async (
 
 export const setupErrorHandling = () => {
   process.on('uncaughtException', error => {
-    showError(error, {title: 'Unhandled Error'});
+    showError(error, {title: i18n.t('UnhandledError')});
   });
 
   process.on('unhandledRejection', error => {
-    showError(ensureError(error), {title: 'Unhandled Promise Rejection'});
+    showError(ensureError(error), {title: i18n.t('UnhandledPromiseRejection')});
   });
 };

@@ -14,6 +14,7 @@ import {generateTimestampedName} from './utils/timestamped-name';
 import {Video} from './video';
 import {ApertureOptions} from './common/types';
 import Sentry, {isSentryEnabled} from './utils/sentry';
+import i18n from './i18n';
 
 import ffmpegPath from './utils/ffmpeg-path';
 
@@ -170,18 +171,18 @@ const handleRecording = async (recording: ActiveRecording) => {
   });
 
   return windowManager.dialog?.open({
-    title: 'Kap didn\'t shut down correctly.',
-    detail: 'Looks like Kap crashed during a recording. Kap was able to locate the file and it appears to be playable.',
+    title: i18n.t('KapDidntShutDownCorrectly'),
+    detail: i18n.t('KapCrashedDuringRecording'),
     buttons: [
-      'Close',
+      i18n.t('Close'),
       {
-        label: 'Show in Finder',
+        label: i18n.t('ShowInFinder'),
         action: () => {
           shell.showItemInFolder(recording.filePath);
         }
       },
       {
-        label: 'Show in Editor',
+        label: i18n.t('ShowInEditor'),
         action: async () => Video.getOrCreate({filePath: recording.filePath, title: recording.name}).openEditorWindow()
       }
     ]
@@ -215,20 +216,20 @@ const knownErrors = [{
 
 const handleCorruptRecording = async (recording: ActiveRecording, error: string) => {
   const options: any = {
-    title: 'Kap didn\'t shut down correctly.',
-    detail: `Looks like Kap crashed during a recording. We were able to locate the file. Unfortunately, it appears to be corrupt.\n\n${error}`,
+    title: i18n.t('KapDidntShutDownCorrectly'),
+    detail: i18n.t('KapCrashedRecordingCorrupt', {error}),
     cancelId: 0,
     defaultId: 2,
     buttons: [
-      'Close',
+      i18n.t('Close'),
       {
-        label: 'Copy Error',
+        label: i18n.t('CopyError'),
         action: () => {
           clipboard.writeText(error);
         }
       },
       {
-        label: 'Show in Finder',
+        label: i18n.t('ShowInFinder'),
         action: () => {
           shell.showItemInFolder(recording.filePath);
         }
@@ -247,11 +248,11 @@ const handleCorruptRecording = async (recording: ActiveRecording, error: string)
     return windowManager.dialog?.open(options);
   }
 
-  options.message = 'We can attempt to repair the recording.';
+  options.message = i18n.t('CanAttemptRepair');
   options.defaultId = 3;
   options.buttons.push({
-    label: 'Attempt to Fix',
-    activeLabel: 'Attempting to Fix…',
+    label: i18n.t('AttemptToFix'),
+    activeLabel: i18n.t('AttemptingToFix'),
     action: async (_: any, updateUi: any) => {
       for (const {fix} of applicableErrors) {
         const outputPath = await fix(recording.filePath);
@@ -264,18 +265,18 @@ const handleCorruptRecording = async (recording: ActiveRecording, error: string)
           });
 
           return updateUi({
-            message: 'The recording was successfully repaired.',
+            message: i18n.t('RecordingSuccessfullyRepaired'),
             defaultId: 2,
             buttons: [
-              'Close',
+              i18n.t('Close'),
               {
-                label: 'Show in Finder',
+                label: i18n.t('ShowInFinder'),
                 action: () => {
                   shell.showItemInFolder(outputPath);
                 }
               },
               {
-                label: 'Show in Editor',
+                label: i18n.t('ShowInEditor'),
                 action: async () => Video.getOrCreate({filePath: outputPath, title: recording.name}).openEditorWindow()
               }
             ]
@@ -284,18 +285,18 @@ const handleCorruptRecording = async (recording: ActiveRecording, error: string)
       }
 
       return updateUi({
-        message: 'Kap was unable to repair the recording.',
+        message: i18n.t('UnableToRepairRecording'),
         defaultId: 2,
         buttons: [
-          'Close',
+          i18n.t('Close'),
           {
-            label: 'Copy Error',
+            label: i18n.t('CopyError'),
             action: () => {
               clipboard.writeText(error);
             }
           },
           {
-            label: 'Show in Finder',
+            label: i18n.t('ShowInFinder'),
             action: () => {
               shell.showItemInFolder(recording.filePath);
             }

@@ -8,6 +8,7 @@ import Switch from '../preferences/item/switch';
 import ColorPicker from '../preferences/item/color-picker';
 import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
 import ShortcutInput from '../preferences/shortcut-input';
+import i18n from '../../i18n';
 
 const horizontalTypes = [
   'boolean',
@@ -157,12 +158,12 @@ class Tab extends React.Component {
         }
         {
           !serviceTitle && (
-            <Item subtitle="Open config file" onClick={openConfig}>
+            <Item subtitle={i18n.t('OpenConfigFile')} onClick={openConfig}>
               <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
             </Item>
           )
         }
-        <Item last subtitle="View plugin on GitHub" onClick={viewOnGithub}>
+        <Item last subtitle={i18n.t('ViewPluginOnGitHub')} onClick={viewOnGithub}>
           <div className="icon-container"><OpenOnGithubIcon size="20px" fill="var(--kap)" hoverFill="var(--kap)" onClick={viewOnGithub}/></div>
         </Item>
         <style jsx>{`

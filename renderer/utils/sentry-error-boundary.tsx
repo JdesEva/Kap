@@ -4,45 +4,15 @@ import electron from "electron";
 import type { api as Api, is as Is } from "electron-util";
 
 const SENTRY_PUBLIC_DSN =
-  "https://04c3d4bad20820a0f358028f28e04d16@o4505409681948672.ingest.sentry.io/4506432195461120";
+  "https://96419da025da075ad44476df484de85a@o4505409681948672.ingest.us.sentry.io/4510657596293120";
 
 class SentryErrorBoundary extends React.Component<{
   children: React.ReactNode;
 }> {
   constructor(props) {
     super(props);
-    const { settings } = electron.remote.require("./common/settings");
-    // Done in-line because this is used in _app
-    const { is, api } = require("electron-util") as {
-      api: typeof Api;
-      is: typeof Is;
-    };
-
-    if (!is.development && settings.get("allowAnalytics")) {
-      const release = `${api.app.name}@${api.app.getVersion()}`.toLowerCase();
-      Sentry.init({
-        dsn: SENTRY_PUBLIC_DSN,
-        release, 
-        // This sets the sample rate to be 10%. You may want this to be 100% while
-        // in development and sample at a lower rate in production
-        replaysSessionSampleRate: 0.1,
-
-        // If the entire session is not sampled, use the below sample rate to sample
-        // sessions when an error occurs.
-        replaysOnErrorSampleRate: 1.0,
-
-        integrations: [
-          new Sentry.Replay({
-            // Additional SDK configuration goes in here, for example:
-            maskAllText: true,
-            blockAllMedia: true,
-          }),
-          new Sentry.BrowserTracing()
-        ],
-        // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-        tracePropagationTargets: [/^\//],
-      });
-    }
+    // Sentry 数据上报功能已禁用
+    // 不再初始化 Sentry
   }
 
   componentDidCatch(error, errorInfo) {

@@ -7,11 +7,12 @@ import {useKeyboardAction} from '../../../hooks/use-keyboard-action';
 import ConversionDetails from './conversion-details';
 import TitleBar from './title-bar';
 import VideoPreview from './video-preview';
+import i18n from '../../../i18n';
 
 const dialogOptions = {
-  message: 'Are you sure you want to discard this conversion?',
-  detail: 'Any progress will be lost.',
-  confirmButtonText: 'Discard'
+  message: i18n.t('AreYouSureDiscardConversion'),
+  detail: i18n.t('AnyProgressWillBeLost'),
+  confirmButtonText: i18n.t('Discard')
 };
 
 const EditorConversionView = ({conversionId}: {conversionId: string}) => {

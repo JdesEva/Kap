@@ -1,10 +1,13 @@
 import React from "react";
 import WindowHeader from "../components/window-header";
 import Exports from "../components/exports";
+import {useTranslation} from "react-i18next";
 
-const ExportsPage = () => (
+const ExportsPage = () => {
+  const {t} = useTranslation();
+  return (
   <div className="cover-window">
-    <WindowHeader title="Exports" />
+    <WindowHeader title={t("Exports")} />
     <Exports />
     <style jsx global>{`
       :root {
@@ -20,6 +23,7 @@ const ExportsPage = () => (
       }
     `}</style>
   </div>
-);
+  );
+};
 
 export default ExportsPage;
