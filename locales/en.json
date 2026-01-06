@@ -120,6 +120,7 @@
     "AreYouSureDiscardConversion": "Are you sure you want to discard this conversion?",
     "AnyProgressWillBeLost": "Any progress will be lost.",
     "OpenConfigFile": "Open config file",
-    "ViewPluginOnGitHub": "View plugin on GitHub"
+    "ViewPluginOnGitHub": "View plugin on GitHub",
+    "Convert": "Convert"
   }
 }

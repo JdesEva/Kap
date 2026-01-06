@@ -1,4 +1,4 @@
-import { Menu } from "electron";
+import { app, Menu } from "electron";
 import { MenuItemId, MenuOptions } from "./utils";
 import {
   getAboutMenuItem,
@@ -38,8 +38,9 @@ const getCogMenuTemplate = async (): Promise<MenuOptions> => [
     type: "separator",
   },
   {
-    role: "quit",
+    label: i18n.t("Quit"),
     accelerator: "Command+Q",
+    click: () => app.quit(),
   },
 ];
 

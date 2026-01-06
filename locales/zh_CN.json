@@ -120,6 +120,7 @@
     "AreYouSureDiscardConversion": "确定要丢弃此转换吗？",
     "AnyProgressWillBeLost": "任何进度都将丢失。",
     "OpenConfigFile": "打开配置文件",
-    "ViewPluginOnGitHub": "在 GitHub 上查看插件"
+    "ViewPluginOnGitHub": "在 GitHub 上查看插件",
+    "Convert": "转换"
   }
 }

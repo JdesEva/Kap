@@ -1,4 +1,4 @@
-import { Menu } from "electron";
+import { app, Menu } from "electron";
 import { MenuItemId, MenuOptions } from "./utils";
 import { pauseRecording, resumeRecording, stopRecording } from "../aperture";
 import formatTime from "../utils/format-time";
@@ -54,8 +54,9 @@ export const getRecordMenuTemplate = (isPaused: boolean): MenuOptions => [
     type: "separator",
   },
   {
-    role: "quit",
+    label: i18n.t("Quit"),
     accelerator: "Command+Q",
+    click: () => app.quit(),
   },
 ];
 
