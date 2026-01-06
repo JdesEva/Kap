@@ -1,8 +1,7 @@
 "use strict";
 
 import { settings } from "./settings";
-
-const pkg = require("../../package.json");
+import pkg from '../../package.json'
 
 // 数据上报功能已移除
 // 保留函数调用以避免破坏代码，但实际不执行任何操作

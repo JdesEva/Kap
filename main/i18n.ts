@@ -11,13 +11,13 @@ const getSystemLanguage = () => {
     return locale === "zh_CN" || locale === "zh-Hans" ? "zh_CN" : "zh_CN";
   }
   // 默认返回英文
-  return "en";
+  return "zh_CN";
 };
 
 i18n.init({
   resources,
   lng: getSystemLanguage(),
-  fallbackLng: "en",
+  fallbackLng: "zh_CN",
   debug: false,
   interpolation: {
     escapeValue: false, //阻止xss攻击

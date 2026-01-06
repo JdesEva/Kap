@@ -1,14 +1,24 @@
 'use strict';
 
-import {Tray} from 'electron';
+import {Tray, app} from 'electron';
 import {KeyboardEvent} from 'electron/main';
 import path from 'path';
+import {is} from 'electron-util';
 import {getCogMenu} from './menus/cog';
 import {getRecordMenu} from './menus/record';
 import {track} from './common/analytics';
 import {openFiles} from './utils/open-files';
 import {windowManager} from './windows/manager';
 import {pauseRecording, resumeRecording, stopRecording} from './aperture';
+
+const getStaticPath = (filename: string) => {
+  if (is.development) {
+    // 开发环境：从项目根目录的 static 文件夹加载
+    return path.join(__dirname, '..', '..', 'static', filename);
+  }
+  // 生产环境：从应用路径的 static 文件夹加载
+  return path.join(app.getAppPath(), 'static', filename);
+};
 
 let tray: Tray;
 let trayAnimation: NodeJS.Timeout | undefined;
@@ -28,7 +38,7 @@ const openPausedContextMenu = async () => {
 const openCropperWindow = () => windowManager.cropper?.open();
 
 export const initializeTray = () => {
-  tray = new Tray(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray = new Tray(getStaticPath('menubarDefaultTemplate.png'));
   tray.on('click', openCropperWindow);
   tray.on('right-click', openContextMenu);
   tray.on('drop-files', (_, files) => {
@@ -52,7 +62,7 @@ export const resetTray = () => {
   tray.removeAllListeners('click');
   tray.removeAllListeners('right-click');
 
-  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray.setImage(getStaticPath('menubarDefaultTemplate.png'));
   tray.on('click', openCropperWindow);
   tray.on('right-click', openContextMenu);
 };
@@ -74,7 +84,7 @@ export const setPausedTray = () => {
 
   tray.removeAllListeners('right-click');
 
-  tray.setImage(path.join(__dirname, '..', 'static', 'pauseTemplate.png'));
+  tray.setImage(getStaticPath('pauseTemplate.png'));
   tray.once('click', resumeRecording);
   tray.on('right-click', openPausedContextMenu);
 };
@@ -98,7 +108,7 @@ const animateIcon = async () => new Promise<void>(resolve => {
       const filename = `loading_${number}Template.png`;
 
       try {
-        tray.setImage(path.join(__dirname, '..', 'static', 'menubar-loading', filename));
+        tray.setImage(getStaticPath(path.join('menubar-loading', filename)));
         next();
       } catch {
         trayAnimation = undefined;
