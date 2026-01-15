@@ -22,7 +22,7 @@ jobs:
     docker:
       - image: cimg/node:lts
     environment:
-      SENTRY_ORG: wulkano-l0
+      SENTRY_ORG: egg
       SENTRY_PROJECT: kap
     steps:
       - checkout

@@ -64,8 +64,9 @@ const Video = () => {
     }
 
     const {Menu} = require('electron-util').api;
+    const i18n = require('../../i18n').default;
     const menu = Menu.buildFromTemplate([{
-      label: 'Snapshot',
+      label: i18n.t('Snapshot'),
       click: () => {
         ipc.callMain('save-snapshot', video.currentTime);
       }

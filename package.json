@@ -12,7 +12,7 @@
     "url": "https://wulkano.com"
   },
   "private": true,
-  "main": "dist-js/index.js",
+  "main": "dist-js/main/index.js",
   "scripts": {
     "lint": "xo",
     "lint:fix": "xo --fix",
@@ -22,19 +22,24 @@
     "start": "tsc && run-electron .",
     "build-main": "tsc",
     "build-renderer": "next build renderer && next export renderer",
-    "build": "yarn build-main && yarn build-renderer",
+    "build": "yarn build-main && yarn build-renderer && (yarn sentry:sourcemaps || echo 'Skipping Sentry sourcemaps (authentication not configured)')",
+    "build:local": "yarn build-main && yarn build-renderer",
     "dist": "npm run build && electron-builder",
+    "dist:local": "npm run build:local && electron-builder",
     "pack": "npm run build && electron-builder --dir",
+    "pack:local": "npm run build:local && electron-builder --dir",
     "postinstall": "electron-builder install-app-deps",
     "sentry-version": "echo \"$npm_package_name@$npm_package_version\"",
-    "dev": "next dev renderer"
+    "dev": "next dev renderer",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eva-gg --project kap ./dist-js && sentry-cli sourcemaps upload --org eva-gg --project kap ./dist-js"
   },
   "bundle": {
     "name": "Kap"
   },
   "dependencies": {
-    "@sentry/browser": "^6.2.2",
-    "@sentry/electron": "^2.4.0",
+    "@sentry/browser": "7.84.0",
+    "@sentry/cli": "^2.23.0",
+    "@sentry/electron": "^4.15.1",
     "@sindresorhus/to-milliseconds": "^1.2.0",
     "ajv": "^6.12.2",
     "aperture": "^6.1.2",
@@ -56,6 +61,8 @@
     "ffmpeg-static": "^4.4.1",
     "gifsicle": "^5.2.0",
     "got": "^9.6.0",
+    "i18next": "^23.7.11",
+    "i18next-browser-languagedetector": "^7.2.0",
     "insight": "^0.10.3",
     "is-online": "^8.4.0",
     "lodash": "^4.17.21",
@@ -80,6 +87,7 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-i18next": "^13.5.0",
     "react-linkify": "^0.2.2",
     "react-tooltip": "^4.2.19",
     "read-pkg": "^5.2.0",
@@ -234,12 +242,6 @@
         }
       }
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint",
-      "pre-push": "yarn lint"
-    }
   },
   "build": {
     "appId": "com.wulkano.kap",

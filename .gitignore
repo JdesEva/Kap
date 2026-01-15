@@ -4,3 +4,9 @@ node_modules
 /app/dist
 /dist
 /dist-js
+
+# Sentry Config File
+.sentryclirc
+
+# Sentry Config File
+.sentryclirc

@@ -1,4 +1,3 @@
-
 export interface EditorWindowState {
   fps: number;
   previewFilePath: string;

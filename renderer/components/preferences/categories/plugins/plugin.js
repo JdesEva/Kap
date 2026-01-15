@@ -1,17 +1,14 @@
-import electron from 'electron';
-import React from 'react';
-import PropTypes from 'prop-types';
+import electron from "electron";
+import React from "react";
+import PropTypes from "prop-types";
+import Item from "../../item";
+import Switch from "../../item/switch";
+import { EditIcon, ErrorIcon } from "../../../../vectors";
+import i18n from '../../../../i18n'
 
-import Item from '../../item';
-import Switch from '../../item/switch';
-import {EditIcon, ErrorIcon} from '../../../../vectors';
-
-const PluginTitle = ({title, label, onClick}) => (
+const PluginTitle = ({ title, label, onClick }) => (
   <div>
-    <div
-      className="plugin-title"
-      onClick={onClick}
-    >
+    <div className="plugin-title" onClick={onClick}>
       {title}
     </div>
     <span>{label}</span>
@@ -37,18 +34,30 @@ const PluginTitle = ({title, label, onClick}) => (
 PluginTitle.propTypes = {
   title: PropTypes.string,
   label: PropTypes.string,
-  onClick: PropTypes.elementType
+  onClick: PropTypes.elementType,
 };
 
-const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig, tabIndex}) => {
-  const requiredVersion = !plugin.isCompatible && (
-    (plugin.kapVersion && `Requires Kap version ${plugin.kapVersion}.`) ||
-    (plugin.macosVersion && `Requires macOS version ${plugin.macosVersion}`)
-  );
+const Plugin = ({
+  plugin,
+  checked,
+  disabled,
+  onTransitionEnd,
+  onClick,
+  loading,
+  openConfig,
+  tabIndex,
+}) => {
+  const requiredVersion =
+    !plugin.isCompatible &&
+    ((plugin.kapVersion && `${i18n.t("PluginsKapVersion")} ${plugin.kapVersion}.`) ||
+      (plugin.macosVersion && `${i18n.t("PluginsMacVersion")} ${plugin.macosVersion}`));
 
   const error = !plugin.isCompatible && (
-    <div className="invalid" title={`This plugin is not supported. ${requiredVersion}`}>
-      <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig}/>
+    <div
+      className="invalid"
+      title={`${i18n.t("PluginsUnSupported")} ${requiredVersion}`}
+    >
+      <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig} />
       <style jsx>{`
         .invalid {
           height: 36px;
@@ -65,8 +74,8 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
   );
 
   const warning = plugin.hasConfig && !plugin.isValid && (
-    <div className="invalid" title="This plugin requires configuration">
-      <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig}/>
+    <div className="invalid" title={i18n.t("PluginsConfiguration")}>
+      <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig} />
       <style jsx>{`
         .invalid {
           height: 36px;
@@ -97,30 +106,34 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
         <PluginTitle
           title={plugin.prettyName}
           label={plugin.version}
-          onClick={onTitleClick}/>
+          onClick={onTitleClick}
+        />
       }
       subtitle={[plugin.description, requiredVersion].filter(Boolean)}
     >
-      {
-        openConfig && plugin.isCompatible && (
-          <div className="config-icon">
-            <EditIcon size="18px" tabIndex={tabIndex} onClick={openConfig}/>
-            <style jsx>{`
-              .config-icon {
-                margin-right: 16px;
-                display: flex;
-              }
-            `}</style>
-          </div>
-        )
-      }
+      {openConfig && plugin.isCompatible && (
+        <div className="config-icon">
+          <EditIcon size="18px" tabIndex={tabIndex} onClick={openConfig} />
+          <style jsx>{`
+            .config-icon {
+              margin-right: 16px;
+              display: flex;
+            }
+          `}</style>
+        </div>
+      )}
       <Switch
         tabIndex={tabIndex}
         checked={checked}
-        disabled={disabled || (!plugin.isCompatible && !plugin.isInstalled) || plugin.isSymlink}
+        disabled={
+          disabled ||
+          (!plugin.isCompatible && !plugin.isInstalled) ||
+          plugin.isSymlink
+        }
         loading={loading}
         onTransitionEnd={onTransitionEnd}
-        onClick={onClick}/>
+        onClick={onClick}
+      />
     </Item>
   );
 };
@@ -133,7 +146,7 @@ Plugin.propTypes = {
   onClick: PropTypes.elementType,
   loading: PropTypes.bool,
   openConfig: PropTypes.func,
-  tabIndex: PropTypes.number.isRequired
+  tabIndex: PropTypes.number.isRequired,
 };
 
 export default Plugin;

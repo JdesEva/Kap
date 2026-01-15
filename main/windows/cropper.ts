@@ -7,6 +7,7 @@ import {settings} from '../common/settings';
 import {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions} from '../common/system-permissions';
 import {loadRoute} from '../utils/routes';
 import {MacWindow} from '../utils/windows';
+import i18n from '../i18n';
 
 const croppers = new Map<number, BrowserWindow>();
 let notificationId: number | undefined;
@@ -100,10 +101,10 @@ const openCropperWindow = async () => {
     const granted = await ensureMicrophonePermissions(async () => {
       const {response} = await dialog.showMessageBox({
         type: 'warning',
-        buttons: ['Open System Preferences', 'Continue'],
+        buttons: [i18n.t('OpenSystemPreferences'), i18n.t('Continue')],
         defaultId: 1,
-        message: 'Kap cannot access the microphone.',
-        detail: 'Audio recording is enabled but Kap does not have access to the microphone. Continue without audio or grant Kap access to the microphone the System Preferences.',
+        message: i18n.t('CannotAccessMicrophone'),
+        detail: i18n.t('AudioRecordingEnabledNoAccess'),
         cancelId: 2
       });
 

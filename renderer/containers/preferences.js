@@ -95,7 +95,7 @@ export default class PreferencesContainer extends Container {
           ],
           defaultId: 0,
           cancelId: 1,
-          message: `Do you want to install the “${target.name}” plugin?`
+          message: require('../i18n').default.t('DoYouWantToInstallPlugin', {pluginName: target.name})
         });
 
         if (buttonIndex === 0) {

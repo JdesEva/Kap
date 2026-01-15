@@ -8,6 +8,7 @@ import VideoTimeContainer from '../video-time-container';
 import VideoControlsContainer from '../video-controls-container';
 import useSharePlugins from 'hooks/editor/use-share-plugins';
 import useEditorOptions from 'hooks/editor/use-editor-options';
+import i18n from '../../../i18n'
 
 const FormatSelect = () => {
   const {formats, format, updateFormat} = OptionsContainer.useContainer();
@@ -160,7 +161,7 @@ const ConvertButton = () => {
 
   return (
     <button type="button" className="start-export" onClick={onClick}>
-      Convert
+      {i18n.t('Convert')}
       <style jsx>{`
         button {
           padding: 4px 8px;

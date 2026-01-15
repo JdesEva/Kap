@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-import {connect, PreferencesContainer} from '../../../../containers';
-import {handleKeyboardActivation} from '../../../../utils/inputs';
-import Category from '../category';
-import Tab, {EmptyTab} from './tab';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect, PreferencesContainer } from "../../../../containers";
+import { handleKeyboardActivation } from "../../../../utils/inputs";
+import Category from "../category";
+import Tab, { EmptyTab } from "./tab";
+import i18n from "../../../../i18n";
 
 class Plugins extends React.Component {
   static defaultProps = {
     pluginsInstalled: [],
     pluginsFromNpm: [],
-    category: 'general'
+    category: "general",
   };
 
   render() {
@@ -26,14 +26,11 @@ class Plugins extends React.Component {
       npmError,
       fetchFromNpm,
       openPluginsConfig,
-      category
+      category,
     } = this.props;
 
-    const tabIndex = category === 'plugins' ? 0 : -1;
-    const allPlugins = [
-      ...pluginsInstalled,
-      ...pluginsFromNpm
-    ].sort((a, b) => {
+    const tabIndex = category === "plugins" ? 0 : -1;
+    const allPlugins = [...pluginsInstalled, ...pluginsFromNpm].sort((a, b) => {
       if (a.isCompatible !== b.isCompatible) {
         return b.isCompatible - a.isCompatible;
       }
@@ -47,64 +44,66 @@ class Plugins extends React.Component {
           <nav className="plugins-nav">
             <div
               tabIndex={tabIndex}
-              className={tab === 'discover' ? 'selected' : ''}
-              onClick={() => selectTab('discover')}
-              onKeyDown={handleKeyboardActivation(() => selectTab('discover'))}
+              className={tab === "discover" ? "selected" : ""}
+              onClick={() => selectTab("discover")}
+              onKeyDown={handleKeyboardActivation(() => selectTab("discover"))}
             >
-              Discover
+              {i18n.t("Discover")}
             </div>
             <div
               tabIndex={tabIndex}
-              className={tab === 'installed' ? 'selected' : ''}
-              onClick={() => selectTab('installed')}
-              onKeyDown={handleKeyboardActivation(() => selectTab('installed'))}
+              className={tab === "installed" ? "selected" : ""}
+              onClick={() => selectTab("installed")}
+              onKeyDown={handleKeyboardActivation(() => selectTab("installed"))}
             >
-              Installed
+              {i18n.t("Installed")}
             </div>
           </nav>
           <div className="tab-container">
-            <div className="switcher"/>
+            <div className="switcher" />
             <div className="tab" id="discover">
-              {
-                npmError ? (
-                  <EmptyTab
-                    showIcon
-                    title="Oops!"
-                    subtitle="Something went wrong…"
-                    link="Refresh"
-                    onClick={fetchFromNpm}/>
-                ) : (
-                  <Tab
-                    tabIndex={tabIndex === 0 && tab === 'discover' ? 0 : -1}
-                    current={pluginBeingInstalled || pluginBeingUninstalled}
-                    plugins={allPlugins}
-                    openConfig={openPluginsConfig}
-                    disabled={Boolean(pluginBeingInstalled || pluginBeingUninstalled)}
-                    onTransitionEnd={onTransitionEnd}
-                    onClick={togglePlugin}/>
-                )
-              }
+              {npmError ? (
+                <EmptyTab
+                  showIcon
+                  title={i18n.t("Oops")}
+                  subtitle={i18n.t("OopsInfo")}
+                  link="Refresh"
+                  onClick={fetchFromNpm}
+                />
+              ) : (
+                <Tab
+                  tabIndex={tabIndex === 0 && tab === "discover" ? 0 : -1}
+                  current={pluginBeingInstalled || pluginBeingUninstalled}
+                  plugins={allPlugins}
+                  openConfig={openPluginsConfig}
+                  disabled={Boolean(
+                    pluginBeingInstalled || pluginBeingUninstalled
+                  )}
+                  onTransitionEnd={onTransitionEnd}
+                  onClick={togglePlugin}
+                />
+              )}
             </div>
             <div className="tab" id="installed">
-              {
-                pluginsInstalled.length === 0 ? (
-                  <EmptyTab
-                    showIcon
-                    title="No plugins yet"
-                    subtitle="Customize Kap to your liking with plugins."
-                    link="Browse"
-                    onClick={() => selectTab('discover')}/>
-                ) : (
-                  <Tab
-                    tabIndex={tabIndex === 0 && tab === 'installed' ? 0 : -1}
-                    disabled={Boolean(pluginBeingInstalled)}
-                    current={pluginBeingUninstalled}
-                    plugins={pluginsInstalled}
-                    openConfig={openPluginsConfig}
-                    onClick={togglePlugin}
-                    onTransitionEnd={onTransitionEnd}/>
-                )
-              }
+              {pluginsInstalled.length === 0 ? (
+                <EmptyTab
+                  showIcon
+                  title={i18n.t("PluginsEmpty")}
+                  subtitle={i18n.t("PluginsEmptyInfo")}
+                  link="Browse"
+                  onClick={() => selectTab("discover")}
+                />
+              ) : (
+                <Tab
+                  tabIndex={tabIndex === 0 && tab === "installed" ? 0 : -1}
+                  disabled={Boolean(pluginBeingInstalled)}
+                  current={pluginBeingUninstalled}
+                  plugins={pluginsInstalled}
+                  openConfig={openPluginsConfig}
+                  onClick={togglePlugin}
+                  onTransitionEnd={onTransitionEnd}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -168,7 +167,7 @@ class Plugins extends React.Component {
           }
 
           .switcher {
-            margin-left: ${tab === 'discover' ? 0 : -100}%;
+            margin-left: ${tab === "discover" ? 0 : -100}%;
             transition: margin 0.3s ease-in-out;
           }
         `}</style>
@@ -189,7 +188,7 @@ Plugins.propTypes = {
   npmError: PropTypes.bool,
   fetchFromNpm: PropTypes.func.isRequired,
   openPluginsConfig: PropTypes.func.isRequired,
-  category: PropTypes.string
+  category: PropTypes.string,
 };
 
 export default connect(
@@ -202,7 +201,7 @@ export default connect(
     onTransitionEnd,
     tab,
     npmError,
-    category
+    category,
   }) => ({
     pluginsInstalled,
     pluginsFromNpm,
@@ -211,16 +210,12 @@ export default connect(
     onTransitionEnd,
     tab,
     npmError,
-    category
-  }), ({
+    category,
+  }),
+  ({ togglePlugin, selectTab, fetchFromNpm, openPluginsConfig }) => ({
     togglePlugin,
     selectTab,
     fetchFromNpm,
-    openPluginsConfig
-  }) => ({
-    togglePlugin,
-    selectTab,
-    fetchFromNpm,
-    openPluginsConfig
+    openPluginsConfig,
   })
 )(Plugins);

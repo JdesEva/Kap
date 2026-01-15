@@ -1,34 +1,17 @@
-'use strict';
+"use strict";
 
-import util from 'electron-util';
-import {parse} from 'semver';
-import {settings} from './settings';
+import { settings } from "./settings";
+import pkg from '../../package.json'
 
-// TODO: Disabled because of https://github.com/wulkano/Kap/issues/1126
-/// const Insight = require('insight');
-const pkg = require('../../package');
-
-/// const trackingCode = 'UA-84705099-2';
-/// const insight = new Insight({trackingCode, pkg});
-
-const version = parse(pkg.version);
-
-export const track = (...paths: string[]) => {
-  const allowAnalytics = settings.get('allowAnalytics');
-
-  if (allowAnalytics) {
-    console.log('Tracking', `v${version?.major}.${version?.minor}`, ...paths);
-    /// insight.track(`v${version?.major}.${version?.minor}`, ...paths);
-  }
+// 数据上报功能已移除
+// 保留函数调用以避免破坏代码，但实际不执行任何操作
+export const track = (..._paths: string[]) => {
+  // 空操作，不进行任何追踪
 };
 
 export const initializeAnalytics = () => {
-  if (util.isFirstAppLaunch()) {
-    /// insight.track('install');
-  }
-
-  if (settings.get('version') !== pkg.version) {
-    track('install');
-    settings.set('version', pkg.version);
+  // 仅保留版本管理功能，移除所有数据上报
+  if (settings.get("version") !== pkg.version) {
+    settings.set("version", pkg.version);
   }
 };

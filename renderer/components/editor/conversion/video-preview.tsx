@@ -7,6 +7,7 @@ import {flags} from '../../../common/flags';
 import ReactTooltip from 'react-tooltip';
 import {useEffect, useRef, useState} from 'react';
 import classNames from 'classnames';
+import i18n from '../../../i18n';
 
 const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConversionState; cancel: () => any; showInFolder: () => any}) => {
   const {conversionId} = useConversionIdContext();
@@ -69,7 +70,7 @@ const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConver
               <ProgressCircle percent={percentage}/>
           }
         </div>
-        <div className="cancel" title="Cancel" onClick={cancel}>
+        <div className="cancel" title={i18n.t('Cancel')} onClick={cancel}>
           <CancelIcon fill="white" hoverFill="white" activeFill="white" size="100%"/>
         </div>
       </div>
